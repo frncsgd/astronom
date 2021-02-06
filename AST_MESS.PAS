@@ -4,11 +4,10 @@ Unit AST_MESS;
 
 interface
 uses
-     LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+     LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls,AST_FIC,
      AST_GEN,
      AST_SUN,
-     ast_moon,
      ast_plan,
      ast_dive;
 
@@ -415,6 +414,9 @@ var
  resecart	: real;
  memoecart	: real;
 begin
+
+ (*ConversionBright; Pour génération fichier brightca.dat*)
+
  assign(fdat,'messicat.dat');
  reset(fdat);
 

@@ -3,7 +3,7 @@ Unit AST_GEN;
 {$MODE Delphi}
 
 interface
-uses LCLIntf, LCLType, LMessages, SysUtils,AST_FIC;
+uses LCLIntf, LCLType, SysUtils,AST_FIC;
 
 const
  unite_astronomique=149597870;

@@ -1,2 +1,5 @@
 *.htm
 *.txt
+*.ppu
+*.o
+*.dcu

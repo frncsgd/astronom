@@ -5,7 +5,7 @@ unit Unit2;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls,AST_SUN,AST_GEN;
 
 type
@@ -49,8 +49,6 @@ end;
 
 procedure TForm2.FormCreate(Sender: TObject);
 
-var
- chaine : string;
 begin
 
 label2.visible:=false;
@@ -68,7 +66,8 @@ label10.visible:=false;
 
 procedure TForm2.Button2Click(Sender: TObject);
 var
- heure,alpha                 : string[8];
+ heure                       : string[8];
+ alpha                       : string[8];
  date                        : string[10];
  delta,rayon,p,b0,l0,num_crn,parallaxe,angsize,secondes : real;
  chaine                      : string;

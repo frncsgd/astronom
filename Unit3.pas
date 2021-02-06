@@ -5,7 +5,7 @@ unit Unit3;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls,AST_SUN,AST_GEN,AST_FIC,AST_MESS,ast_dive,ast_moon;
 
 type
@@ -57,10 +57,7 @@ procedure TForm3.FormCreate(Sender: TObject);
 var
  chaine : string;
 begin
-
-
-
- edit1.text:=FormatDateTime('dd/mm/yyyy hh:mm:ss',Now);
+       edit1.text:=FormatDateTime('dd/mm/yyyy hh:mm:ss',Now);
  end;
 
 procedure TForm3.Button2Click(Sender: TObject);
@@ -100,7 +97,7 @@ var
  alphalune	: string [8];
  deltalune	: real;
  lambda		: real;
- a1,a2,toto	: real;
+ a1,a2          : real;
  ecartlune	: real;
 
 begin
