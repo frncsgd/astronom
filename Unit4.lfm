@@ -1,0 +1,362 @@
+object Form4: TForm4
+  Left = 194
+  Height = 546
+  Top = 67
+  Width = 1019
+  ActiveControl = Button1
+  Caption = 'Suivi dobjet en temps réel'
+  ClientHeight = 546
+  ClientWidth = 1019
+  Color = clBlack
+  Font.Color = clRed
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  OnCreate = FormCreate
+  LCLVersion = '2.0.2.0'
+  object Label1: TLabel
+    Left = 216
+    Height = 36
+    Top = 16
+    Width = 90
+    Caption = 'Label1'
+    Font.Color = clRed
+    Font.Height = -31
+    Font.Name = 'MS Sans Serif'
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label2: TLabel
+    Left = 216
+    Height = 13
+    Top = 128
+    Width = 32
+    Caption = 'Label2'
+    Color = clWhite
+    Font.Color = clRed
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    ParentColor = False
+    ParentFont = False
+    Transparent = False
+  end
+  object Label3: TLabel
+    Left = 216
+    Height = 13
+    Top = 160
+    Width = 32
+    Caption = 'Label3'
+    Color = clWhite
+    Font.Color = clRed
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    ParentColor = False
+    ParentFont = False
+    Transparent = False
+  end
+  object Label4: TLabel
+    Left = 216
+    Height = 13
+    Top = 176
+    Width = 32
+    Caption = 'Label3'
+    Color = clWhite
+    Font.Color = clRed
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    ParentColor = False
+    ParentFont = False
+    Transparent = False
+  end
+  object Label5: TLabel
+    Left = 216
+    Height = 13
+    Top = 192
+    Width = 32
+    Caption = 'Label3'
+    Color = clWhite
+    Font.Color = clRed
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    ParentColor = False
+    ParentFont = False
+    Transparent = False
+  end
+  object Label6: TLabel
+    Left = 216
+    Height = 13
+    Top = 208
+    Width = 32
+    Caption = 'Label3'
+    Color = clWhite
+    Font.Color = clRed
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    ParentColor = False
+    ParentFont = False
+    Transparent = False
+  end
+  object Label7: TLabel
+    Left = 216
+    Height = 36
+    Top = 280
+    Width = 97
+    Caption = 'Label3'
+    Color = clWhite
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clRed
+    Font.Height = -31
+    Font.Name = 'MS Sans Serif'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+    Transparent = False
+  end
+  object Label8: TLabel
+    Left = 216
+    Height = 36
+    Top = 320
+    Width = 97
+    Caption = 'Label3'
+    Color = clWhite
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clRed
+    Font.Height = -31
+    Font.Name = 'MS Sans Serif'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+    Transparent = False
+  end
+  object Label9: TLabel
+    Left = 216
+    Height = 13
+    Top = 224
+    Width = 32
+    Caption = 'Label3'
+    Color = clWhite
+    Font.Color = clRed
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    ParentColor = False
+    ParentFont = False
+    Transparent = False
+  end
+  object Label10: TLabel
+    Left = 216
+    Height = 13
+    Top = 240
+    Width = 32
+    Caption = 'Label3'
+    Color = clWhite
+    Font.Color = clRed
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    ParentColor = False
+    ParentFont = False
+    Transparent = False
+  end
+  object Label11: TLabel
+    Left = 384
+    Height = 36
+    Top = 16
+    Width = 107
+    Caption = 'Label11'
+    Font.Color = clRed
+    Font.Height = -31
+    Font.Name = 'MS Sans Serif'
+    ParentColor = False
+    ParentFont = False
+  end
+  object ListBox1: TListBox
+    Left = 24
+    Height = 336
+    Top = 16
+    Width = 152
+    Color = clGrayText
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clRed
+    Font.Height = -20
+    Font.Name = 'MS Sans Serif'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ItemHeight = 0
+    OnClick = ListBox1Click
+    ParentFont = False
+    ScrollWidth = 110
+    TabOrder = 0
+  end
+  object Button1: TButton
+    Left = 200
+    Height = 25
+    Top = 72
+    Width = 97
+    Caption = 'Lancer Calcul'
+    OnClick = Button1Click
+    TabOrder = 1
+  end
+  object Touche7: TButton
+    Left = 560
+    Height = 29
+    Top = 120
+    Width = 44
+    Caption = '7'
+    Font.Color = clRed
+    Font.Height = -24
+    Font.Name = 'MS Sans Serif'
+    OnClick = Touche7Click
+    ParentFont = False
+    TabOrder = 2
+  end
+  object Touche8: TButton
+    Left = 616
+    Height = 29
+    Top = 120
+    Width = 44
+    Caption = '8'
+    Font.Color = clRed
+    Font.Height = -24
+    Font.Name = 'MS Sans Serif'
+    OnClick = Touche8Click
+    ParentFont = False
+    TabOrder = 3
+  end
+  object Touche9: TButton
+    Left = 672
+    Height = 29
+    Top = 120
+    Width = 44
+    Caption = '9'
+    Font.Color = clRed
+    Font.Height = -24
+    Font.Name = 'MS Sans Serif'
+    OnClick = Touche9Click
+    ParentFont = False
+    TabOrder = 4
+  end
+  object Touche10: TButton
+    Left = 560
+    Height = 29
+    Top = 168
+    Width = 44
+    Caption = '4'
+    Font.Color = clRed
+    Font.Height = -24
+    Font.Name = 'MS Sans Serif'
+    OnClick = Touche10Click
+    ParentFont = False
+    TabOrder = 5
+  end
+  object Touche11: TButton
+    Left = 616
+    Height = 29
+    Top = 168
+    Width = 44
+    Caption = '5'
+    Font.Color = clRed
+    Font.Height = -24
+    Font.Name = 'MS Sans Serif'
+    OnClick = Touche11Click
+    ParentFont = False
+    TabOrder = 6
+  end
+  object Touche12: TButton
+    Left = 672
+    Height = 29
+    Top = 168
+    Width = 44
+    Caption = '6'
+    Font.Color = clRed
+    Font.Height = -24
+    Font.Name = 'MS Sans Serif'
+    OnClick = Touche12Click
+    ParentFont = False
+    TabOrder = 7
+  end
+  object Touche13: TButton
+    Left = 560
+    Height = 29
+    Top = 216
+    Width = 44
+    Caption = '1'
+    Font.Color = clRed
+    Font.Height = -24
+    Font.Name = 'MS Sans Serif'
+    OnClick = Touche13Click
+    ParentFont = False
+    TabOrder = 8
+  end
+  object Touche14: TButton
+    Left = 616
+    Height = 29
+    Top = 216
+    Width = 44
+    Caption = '2'
+    Font.Color = clRed
+    Font.Height = -24
+    Font.Name = 'MS Sans Serif'
+    OnClick = Touche14Click
+    ParentFont = False
+    TabOrder = 9
+  end
+  object Touche15: TButton
+    Left = 672
+    Height = 29
+    Top = 216
+    Width = 44
+    Caption = '3'
+    Font.Color = clRed
+    Font.Height = -24
+    Font.Name = 'MS Sans Serif'
+    OnClick = Touche15Click
+    ParentFont = False
+    TabOrder = 10
+  end
+  object Touche16: TButton
+    Left = 560
+    Height = 29
+    Top = 264
+    Width = 44
+    Caption = '0'
+    Font.Color = clRed
+    Font.Height = -24
+    Font.Name = 'MS Sans Serif'
+    OnClick = Touche16Click
+    ParentFont = False
+    TabOrder = 11
+  end
+  object Touche17: TButton
+    Left = 744
+    Height = 29
+    Top = 264
+    Width = 44
+    Caption = 'C'
+    Font.Color = clRed
+    Font.Height = -24
+    Font.Name = 'MS Sans Serif'
+    OnClick = Touche17Click
+    ParentFont = False
+    TabOrder = 12
+  end
+  object Label12: TLabel
+    Left = 552
+    Height = 36
+    Top = 72
+    Width = 107
+    Caption = 'Label12'
+    Font.Color = clRed
+    Font.Height = -31
+    Font.Name = 'MS Sans Serif'
+    ParentColor = False
+    ParentFont = False
+  end
+  object Timer1: TTimer
+    OnTimer = Timer1Timer
+    left = 792
+    top = 32
+  end
+end

@@ -1,0 +1,66 @@
+{ This is an automatically generated lazarus resource file }
+
+LazarusResources.Add('TForm1','FORMDATA',[
+  'TPF0'#6'TForm1'#5'Form1'#4'Left'#3'.'#1#6'Height'#3'7'#1#3'Top'#3'Q'#1#5'Wid'
+  +'th'#3#183#1#7'Caption'#6#15'Ecran Principal'#12'ClientHeight'#3'#'#1#11'Cli'
+  +'entWidth'#3#183#1#5'Color'#7#9'clBtnFace'#10'Font.Color'#7#12'clWindowText'
+  +#11'Font.Height'#2#245#9'Font.Name'#6#13'MS Sans Serif'#4'Menu'#7#9'MainMenu'
+  +'1'#8'OnCreate'#7#10'FormCreate'#10'LCLVersion'#6#7'1.4.4.0'#0#6'TLabel'#6'L'
+  +'abel1'#4'Left'#2'h'#6'Height'#2#13#3'Top'#2#24#5'Width'#2'&'#7'Caption'#6#8
+  +'Latitude'#11'ParentColor'#8#0#0#6'TLabel'#6'Label2'#4'Left'#2'h'#6'Height'#2
+  +#13#3'Top'#2'0'#5'Width'#2'/'#7'Caption'#6#9'Longitude'#11'ParentColor'#8#0#0
+  +#6'TLabel'#6'Label3'#4'Left'#2'h'#6'Height'#2#13#3'Top'#2'H'#5'Width'#2'.'#7
+  +'Caption'#6#8'TU/Local'#11'ParentColor'#8#0#0#6'TLabel'#6'Label5'#4'Left'#3
+  +#152#0#6'Height'#2#13#3'Top'#3#168#0#5'Width'#2' '#9'Alignment'#7#8'taCenter'
+  +#7'Caption'#6#6'Label5'#11'ParentColor'#8#0#0#7'TButton'#7'Button1'#4'Left'#3
+  +#248#0#6'Height'#2'!'#3'Top'#2'('#5'Width'#2'y'#7'Caption'#6#26'Mettre '#195
+  +#160' jour param'#195#168'tres'#7'OnClick'#7#12'Button1Click'#8'TabOrder'#2#0
+  +#0#0#7'TButton'#7'Button2'#4'Left'#3#152#0#6'Height'#2'!'#3'Top'#2'x'#5'Widt'
+  +'h'#2'y'#7'Caption'#6#7'Quitter'#7'OnClick'#7#12'Button2Click'#8'TabOrder'#2
+  +#1#0#0#5'TEdit'#5'Edit1'#4'Left'#3#160#0#6'Height'#2#21#3'Top'#2#24#5'Width'
+  +#2'9'#8'OnChange'#7#11'Edit1Change'#8'TabOrder'#2#2#4'Text'#6#5'Edit1'#0#0#5
+  +'TEdit'#5'Edit2'#4'Left'#3#160#0#6'Height'#2#21#3'Top'#2'0'#5'Width'#2'9'#8
+  +'OnChange'#7#11'Edit2Change'#8'TabOrder'#2#3#4'Text'#6#5'Edit1'#0#0#5'TEdit'
+  +#5'Edit3'#4'Left'#3#160#0#6'Height'#2#21#3'Top'#2'H'#5'Width'#2'9'#8'OnChang'
+  +'e'#7#11'Edit3Change'#8'TabOrder'#2#4#4'Text'#6#5'Edit1'#0#0#9'TMainMenu'#9
+  +'MainMenu1'#4'left'#2'0'#3'top'#3#200#0#0#9'TMenuItem'#4'tata'#7'Caption'#6#7
+  +'Quitter'#7'OnClick'#7#9'tataClick'#0#0#9'TMenuItem'#6'Menu21'#7'Caption'#6#6
+  +'Soleil'#0#9'TMenuItem'#8'smenu211'#7'Caption'#6#22'Donn'#195#169'es Journal'
+  +'i'#195#168'res'#7'OnClick'#7#13'smenu211Click'#0#0#9'TMenuItem'#6'smenu1'#7
+  +'Caption'#6#21'Edition Eph'#195#169'm'#195#169'rides'#7'OnClick'#7#11'smenu1'
+  +'Click'#0#0#9'TMenuItem'#13'EditionPB0L01'#7'Caption'#6#15'Edition P,B0,L0'#7
+  +'OnClick'#7#18'EditionPB0L01Click'#0#0#9'TMenuItem'#27'EditionRotationsSynod'
+  +'iques1'#7'Caption'#6#28'Edition Rotations Synodiques'#7'OnClick'#7' Edition'
+  +'RotationsSynodiques1Click'#0#0#9'TMenuItem'#30'EditionParallaxeset12diamtre'
+  +'s1'#7'Caption'#6'$Edition Parallaxes et 1/2 diam'#195#168'tres'#7'OnClick'#7
+  +'#EditionParallaxeset12diamtres1Click'#0#0#0#9'TMenuItem'#5'Lune1'#7'Caption'
+  +#6#4'Lune'#0#9'TMenuItem'#13'PositionLune1'#7'Caption'#6#13'Position Lune'#7
+  +'OnClick'#7#18'PositionLune1Click'#0#0#9'TMenuItem'#11'PhasesLune1'#7'Captio'
+  +'n'#6#11'Phases Lune'#7'OnClick'#7#16'PhasesLune1Click'#0#0#9'TMenuItem'#17
+  +'EditionEphmrides1'#7'Caption'#6#21'Edition Eph'#195#169'm'#195#169'rides'#7
+  +'OnClick'#7#22'EditionEphmrides1Click'#0#0#9'TMenuItem'#23'EditionSynthseAnn'
+  +'uelle1'#7'Caption'#6#26'Edition Synth'#195#168'se Annuelle'#7'OnClick'#7#28
+  +'EditionSynthseAnnuelle1Click'#0#0#9'TMenuItem'#16'DonnesPhysiques1'#7'Capti'
+  +'on'#6#18'Donn'#195#169'es Physiques'#7'OnClick'#7#21'DonnesPhysiques1Click'
+  +#0#0#0#9'TMenuItem'#8'Plantes1'#7'Caption'#6#9'Plan'#195#168'tes'#0#9'TMenuI'
+  +'tem'#18'ElmentsdesOrbites1'#7'Caption'#6#21'El'#195#169'ments des Orbites'#7
+  +'OnClick'#7#23'ElmentsdesOrbites1Click'#0#0#9'TMenuItem'#10'Ephmrides1'#7'Ca'
+  +'ption'#6#13'Eph'#195#169'm'#195#169'rides'#7'OnClick'#7#15'Ephmrides1Click'
+  +#0#0#9'TMenuItem'#25'LongitudesHliocentriques1'#7'Caption'#6#27'Longitudes H'
+  +#195#169'liocentriques'#7'OnClick'#7#30'LongitudesHliocentriques1Click'#0#0#0
+  +#9'TMenuItem'#14'ObjetsMessier1'#7'Caption'#6#14'Objets Messier'#0#9'TMenuIt'
+  +'em'#16'Etoilesvoisines1'#7'Caption'#6#16'Etoiles voisines'#7'OnClick'#7#21
+  +'Etoilesvoisines1Click'#0#0#9'TMenuItem'#21'Visibilitpourunedate1'#7'Caption'
+  +#6#25'Visibilit'#195#169' pour une date'#7'OnClick'#7#26'Visibilitpourunedat'
+  +'e1Click'#0#0#9'TMenuItem'#26'Hauteuretazimuthuninstant1'#7'Caption'#6' Haut'
+  +'eur et azimuth '#195#160' un instant'#7'OnClick'#7#31'Hauteuretazimuthunins'
+  +'tant1Click'#0#0#9'TMenuItem'#9'MenuItem1'#7'Caption'#6#14'Conversion BDD'#7
+  +'OnClick'#7#14'MenuItem1Click'#0#0#0#9'TMenuItem'#12'CielProfond1'#7'Caption'
+  +#6#12'Ciel Profond'#0#9'TMenuItem'#27'HauteurAzimutpouruninstant1'#7'Caption'
+  +#6#30'Hauteur/Azimut pour un instant'#7'OnClick'#7' HauteurAzimutpouruninsta'
+  +'nt1Click'#0#0#9'TMenuItem'#9'MenuItem2'#7'Caption'#6#14'Conversion BDD'#7'O'
+  +'nClick'#7#14'MenuItem2Click'#0#0#0#9'TMenuItem'#6'Divers'#7'Caption'#6#6'Di'
+  +'vers'#0#9'TMenuItem'#9'Tempsrel1'#7'Caption'#6#11'Temps r'#195#169'el'#7'On'
+  +'Click'#7#14'Tempsrel1Click'#0#0#0#0#6'TTimer'#6'Timer1'#7'OnTimer'#7#11'Tim'
+  +'er1Timer'#4'left'#2'1'#3'top'#2'x'#0#0#0
+]);

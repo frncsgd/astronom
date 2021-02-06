@@ -1,0 +1,137 @@
+Hint: * Conversion du fichier C:\lazarus\astronom\Astronomie.dpr *
+Hint: Définitions -dBorland -dVer150 -dDelphi7 -dCompiler6_Up -dPUREPASCAL ajoutées dans les options personnalisées
+Hint: Tous les fichiers d'unités ont été trouvés
+Hint: * Ajustement des unités utilisées pour le fichier C:\lazarus\astronom\Astronomie.dpr *
+Hint: 
+Hint: *** Conversion des fichiers unités appartenant au projet/paquet **
+Hint: * Conversion du fichier C:\lazarus\astronom\Unit1.pas *
+Hint: Codage modifié de cp1252 en "UTF-8"
+Hint: Ajustement de la casse des caractères de l'unité "unit2" en "Unit2".
+Hint: Ajustement de la casse des caractères de l'unité "unit3" en "Unit3".
+Hint: Ajustement de la casse des caractères de l'unité "unit4" en "Unit4".
+Hint: Ajustement de la casse des caractères de l'unité "ast_mess" en "AST_MESS".
+Hint: Ajustement de la casse des caractères de l'unité "ast_fic" en "AST_FIC".
+Hint: Ajustement de la casse des caractères de l'unité "ast_sun" en "AST_SUN".
+Hint: Ajustement de la casse des caractères de l'unité "Ast_deep" en "AST_DEEP".
+Hint: Ajustement de la casse des caractères de l'unité "ast_star" en "Ast_star".
+Hint: Unité "Windows" remplacée par "LCLIntf, LCLType, LMessages" dans la section "uses".
+Hint: * Conversion du fichier C:\lazarus\astronom\Unit2.pas *
+Hint: Codage modifié de cp1252 en "UTF-8"
+Hint: Codage modifié de cp1252 en "UTF-8"
+Hint: Ajustement de la casse des caractères de l'unité "ast_sun" en "AST_SUN".
+Hint: Ajustement de la casse des caractères de l'unité "ast_gen" en "AST_GEN".
+Hint: Unité "Windows" remplacée par "LCLIntf, LCLType, LMessages" dans la section "uses".
+Hint: * Conversion du fichier C:\lazarus\astronom\Unit3.pas *
+Hint: Codage modifié de cp1252 en "UTF-8"
+Hint: Ajustement de la casse des caractères de l'unité "ast_sun" en "AST_SUN".
+Hint: Ajustement de la casse des caractères de l'unité "ast_gen" en "AST_GEN".
+Hint: Ajustement de la casse des caractères de l'unité "ast_fic" en "AST_FIC".
+Hint: Ajustement de la casse des caractères de l'unité "ast_mess" en "AST_MESS".
+Hint: Unité "ShellAPI" retirée de la section "uses".
+Hint: Unité "Windows" remplacée par "LCLIntf, LCLType, LMessages" dans la section "uses".
+Hint: Appel ShellExecute(0,nil,'messhaz.htm','', '', SW_SHOWNORMAL); remplacé par  OpenDocument('messhaz.htm'); { *Converti depuis ShellExecute* }
+Hint: * Conversion du fichier C:\lazarus\astronom\Unit4.pas *
+Hint: Codage modifié de cp1252 en "UTF-8"
+Hint: Codage modifié de cp1252 en "UTF-8"
+Hint: Ajustement de la casse des caractères de l'unité "ast_fic" en "AST_FIC".
+Hint: Ajustement de la casse des caractères de l'unité "ast_gen" en "AST_GEN".
+Hint: Ajustement de la casse des caractères de l'unité "ast_sun" en "AST_SUN".
+Hint: Unité "Windows" remplacée par "LCLIntf, LCLType, LMessages" dans la section "uses".
+Hint: * Conversion du fichier C:\lazarus\astronom\AST_GEN.PAS *
+Hint: Codage modifié de cp1252 en "UTF-8"
+Hint: Ajustement de la casse des caractères de l'unité "ast_fic" en "AST_FIC".
+Hint: Unité "windows" remplacée par "LCLIntf, LCLType, LMessages" dans la section "uses".
+Hint: Nom du fichier corrigé de Ast_Gen en AST_GEN.
+Hint: * Conversion du fichier C:\lazarus\astronom\AST_FIC.PAS *
+Hint: Nom du fichier corrigé de Ast_Fic en AST_FIC.
+Hint: * Conversion du fichier C:\lazarus\astronom\AST_SUN.PAS *
+Hint: Codage modifié de cp1252 en "UTF-8"
+Hint: Ajustement de la casse des caractères de l'unité "ast_fic" en "AST_FIC".
+Hint: Ajustement de la casse des caractères de l'unité "ast_gen" en "AST_GEN".
+Hint: Unité "ShellAPI" retirée de la section "uses".
+Hint: Unité "Windows" remplacée par "LCLIntf, LCLType, LMessages" dans la section "uses".
+Hint: Nom du fichier corrigé de Ast_Sun en AST_SUN.
+Hint: Appel ShellExecute(0,nil,'paral.txt','', '', SW_SHOWNORMAL); remplacé par  OpenDocument('paral.txt'); { *Converti depuis ShellExecute* }
+Hint: Appel ShellExecute(0,nil,'ephcrn.txt','', '', SW_SHOWNORMAL); remplacé par  OpenDocument('ephcrn.txt'); { *Converti depuis ShellExecute* }
+Hint: Appel ShellExecute(0,nil,'ephem.txt','', '', SW_SHOWNORMAL); remplacé par  OpenDocument('ephem.txt'); { *Converti depuis ShellExecute* }
+Hint: Appel ShellExecute(0,nil,'ephem.txt','', '', SW_SHOWNORMAL); remplacé par  OpenDocument('ephem.txt'); { *Converti depuis ShellExecute* }
+Hint: * Conversion du fichier C:\lazarus\astronom\AST_MESS.PAS *
+Hint: Codage modifié de cp1252 en "UTF-8"
+Hint: Ajustement de la casse des caractères de l'unité "ast_fic" en "AST_FIC".
+Hint: Ajustement de la casse des caractères de l'unité "ast_gen" en "AST_GEN".
+Hint: Ajustement de la casse des caractères de l'unité "ast_sun" en "AST_SUN".
+Hint: Unité "ShellAPI" retirée de la section "uses".
+Hint: Unité "Windows" remplacée par "LCLIntf, LCLType, LMessages" dans la section "uses".
+Hint: Nom du fichier corrigé de Ast_Mess en AST_MESS.
+Hint: Appel ShellExecute(0,nil,'messier3.htm','', '', SW_SHOWNORMAL); remplacé par  OpenDocument('messier3.htm'); { *Converti depuis ShellExecute* }
+Hint: Appel ShellExecute(0,nil,'messier2.htm','', '', SW_SHOWNORMAL); remplacé par  OpenDocument('messier2.htm'); { *Converti depuis ShellExecute* }
+Hint: Appel ShellExecute(0,nil,'messier1.htm','', '', SW_SHOWNORMAL) remplacé par  OpenDocument('messier1.htm') { *Converti depuis ShellExecute* }
+Hint: * Conversion du fichier C:\lazarus\astronom\ast_dive.pas *
+Hint: Codage modifié de cp1252 en "UTF-8"
+Hint: Ajustement de la casse des caractères de l'unité "ast_fic" en "AST_FIC".
+Hint: Ajustement de la casse des caractères de l'unité "ast_gen" en "AST_GEN".
+Hint: Ajustement de la casse des caractères de l'unité "ast_sun" en "AST_SUN".
+Hint: * Conversion du fichier C:\lazarus\astronom\ast_moon.pas *
+Hint: Codage modifié de cp1252 en "UTF-8"
+Hint: Ajustement de la casse des caractères de l'unité "ast_fic" en "AST_FIC".
+Hint: Ajustement de la casse des caractères de l'unité "ast_gen" en "AST_GEN".
+Hint: Ajustement de la casse des caractères de l'unité "ast_sun" en "AST_SUN".
+Hint: Unité "ShellAPI" retirée de la section "uses".
+Hint: Unité "Windows" remplacée par "LCLIntf, LCLType, LMessages" dans la section "uses".
+Hint: Appel ShellExecute(0,nil,'synthlune.txt','', '', SW_SHOWNORMAL); remplacé par  OpenDocument('synthlune.txt'); { *Converti depuis ShellExecute* }
+Hint: Appel ShellExecute(0,nil,'ephemphases.txt','', '', SW_SHOWNORMAL); remplacé par  OpenDocument('ephemphases.txt'); { *Converti depuis ShellExecute* }
+Hint: Appel ShellExecute(0,nil,'ephemlune.txt','', '', SW_SHOWNORMAL); remplacé par  OpenDocument('ephemlune.txt'); { *Converti depuis ShellExecute* }
+Hint: Appel ShellExecute(0,nil,'journlune.txt','', '', SW_SHOWNORMAL); remplacé par  OpenDocument('journlune.txt'); { *Converti depuis ShellExecute* }
+Hint: * Conversion du fichier C:\lazarus\astronom\ast_plan.pas *
+Hint: Codage modifié de cp1252 en "UTF-8"
+Hint: Ajustement de la casse des caractères de l'unité "ast_fic" en "AST_FIC".
+Hint: Ajustement de la casse des caractères de l'unité "ast_gen" en "AST_GEN".
+Hint: Ajustement de la casse des caractères de l'unité "ast_sun" en "AST_SUN".
+Hint: Unité "ShellAPI" retirée de la section "uses".
+Hint: Unité "Windows" remplacée par "LCLIntf, LCLType, LMessages" dans la section "uses".
+Hint: Appel ShellExecute(0,nil,'helioplanetes.txt','', '', SW_SHOWNORMAL); remplacé par  OpenDocument('helioplanetes.txt'); { *Converti depuis ShellExecute* }
+Hint: Appel ShellExecute(0,nil,'planetes.txt','', '', SW_SHOWNORMAL); remplacé par  OpenDocument('planetes.txt'); { *Converti depuis ShellExecute* }
+Hint: Appel ShellExecute(0,nil,'orbites.htm','', '', SW_SHOWNORMAL); remplacé par  OpenDocument('orbites.htm'); { *Converti depuis ShellExecute* }
+Hint: * Conversion du fichier C:\lazarus\astronom\AST_DEEP.PAS *
+Hint: Codage modifié de cp1252 en "UTF-8"
+Hint: Ajustement de la casse des caractères de l'unité "ast_fic" en "AST_FIC".
+Hint: Ajustement de la casse des caractères de l'unité "ast_gen" en "AST_GEN".
+Hint: Ajustement de la casse des caractères de l'unité "ast_sun" en "AST_SUN".
+Hint: Unité "ShellAPI" retirée de la section "uses".
+Hint: Unité "Windows" remplacée par "LCLIntf, LCLType, LMessages" dans la section "uses".
+Hint: Nom du fichier corrigé de Ast_Deep en AST_DEEP.
+Hint: Appel ShellExecute(0,nil,'deephaz.htm','', '', SW_SHOWNORMAL); remplacé par  OpenDocument('deephaz.htm'); { *Converti depuis ShellExecute* }
+Hint: * Conversion du fichier C:\lazarus\astronom\Ast_star.pas *
+Hint: Ajustement de la casse des caractères de l'unité "ast_fic" en "AST_FIC".
+Hint: Ajustement de la casse des caractères de l'unité "ast_gen" en "AST_GEN".
+Hint: Ajustement de la casse des caractères de l'unité "ast_sun" en "AST_SUN".
+Hint: Unité "ShellAPI" retirée de la section "uses".
+Hint: Unité "Windows" remplacée par "LCLIntf, LCLType, LMessages" dans la section "uses".
+Hint: Nom du fichier corrigé de Ast_Star en Ast_star.
+Hint: 
+Hint: *** Ajustement des unités utilisées et réparation des fichiers des fiches ***
+Hint: * Réparation du fichier de la fiche C:\lazarus\astronom\Unit1.lfm *
+Hint: Propriété supprimée : "TextHeight".
+Hint: Propriété supprimée : "OldCreateOrder".
+Hint: * Ajustement des unités utilisées pour le fichier C:\lazarus\astronom\Unit1.pas *
+Hint: * Réparation du fichier de la fiche C:\lazarus\astronom\Unit2.lfm *
+Hint: Propriété supprimée : "TextHeight".
+Hint: * Ajustement des unités utilisées pour le fichier C:\lazarus\astronom\Unit2.pas *
+Hint: * Réparation du fichier de la fiche C:\lazarus\astronom\Unit3.lfm *
+Hint: Propriété supprimée : "TextHeight".
+Hint: Propriété supprimée : "OldCreateOrder".
+Hint: * Ajustement des unités utilisées pour le fichier C:\lazarus\astronom\Unit3.pas *
+Hint: * Réparation du fichier de la fiche C:\lazarus\astronom\Unit4.lfm *
+Hint: Propriété supprimée : "TextHeight".
+Hint: * Ajustement des unités utilisées pour le fichier C:\lazarus\astronom\Unit4.pas *
+Hint: * Ajustement des unités utilisées pour le fichier C:\lazarus\astronom\AST_GEN.PAS *
+Hint: * Ajustement des unités utilisées pour le fichier C:\lazarus\astronom\AST_FIC.PAS *
+Hint: * Ajustement des unités utilisées pour le fichier C:\lazarus\astronom\AST_SUN.PAS *
+Hint: * Ajustement des unités utilisées pour le fichier C:\lazarus\astronom\AST_MESS.PAS *
+Hint: * Ajustement des unités utilisées pour le fichier C:\lazarus\astronom\ast_dive.pas *
+Hint: * Ajustement des unités utilisées pour le fichier C:\lazarus\astronom\ast_moon.pas *
+Hint: * Ajustement des unités utilisées pour le fichier C:\lazarus\astronom\ast_plan.pas *
+Hint: * Ajustement des unités utilisées pour le fichier C:\lazarus\astronom\AST_DEEP.PAS *
+Hint: * Ajustement des unités utilisées pour le fichier C:\lazarus\astronom\Ast_star.pas *
+Hint: La conversion a pris : 00:00:05
+Hint: Conversion prête.

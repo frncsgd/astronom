@@ -1,0 +1,207 @@
+object Form1: TForm1
+  Left = 516
+  Height = 311
+  Top = 182
+  Width = 580
+  Caption = 'Ecran Principal'
+  ClientHeight = 291
+  ClientWidth = 580
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Menu = MainMenu1
+  OnCreate = FormCreate
+  LCLVersion = '2.0.2.0'
+  object Label1: TLabel
+    Left = 104
+    Height = 13
+    Top = 24
+    Width = 38
+    Caption = 'Latitude'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    Left = 104
+    Height = 13
+    Top = 48
+    Width = 47
+    Caption = 'Longitude'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    Left = 104
+    Height = 13
+    Top = 72
+    Width = 46
+    Caption = 'TU/Local'
+    ParentColor = False
+  end
+  object Label5: TLabel
+    Left = 152
+    Height = 13
+    Top = 168
+    Width = 32
+    Alignment = taCenter
+    Caption = 'Label5'
+    ParentColor = False
+  end
+  object Button1: TButton
+    Left = 248
+    Height = 33
+    Top = 40
+    Width = 121
+    Caption = 'Mettre à jour paramètres'
+    OnClick = Button1Click
+    TabOrder = 0
+  end
+  object Button2: TButton
+    Left = 152
+    Height = 33
+    Top = 120
+    Width = 121
+    Caption = 'Quitter'
+    OnClick = Button2Click
+    TabOrder = 1
+  end
+  object Edit1: TEdit
+    Left = 160
+    Height = 21
+    Top = 24
+    Width = 57
+    OnChange = Edit1Change
+    TabOrder = 2
+    Text = 'Edit1'
+  end
+  object Edit2: TEdit
+    Left = 160
+    Height = 21
+    Top = 48
+    Width = 57
+    OnChange = Edit2Change
+    TabOrder = 3
+    Text = 'Edit1'
+  end
+  object Edit3: TEdit
+    Left = 160
+    Height = 21
+    Top = 72
+    Width = 57
+    OnChange = Edit3Change
+    TabOrder = 4
+    Text = 'Edit1'
+  end
+  object MainMenu1: TMainMenu
+    left = 48
+    top = 200
+    object tata: TMenuItem
+      Caption = 'Quitter'
+      OnClick = tataClick
+    end
+    object Menu21: TMenuItem
+      Caption = 'Soleil'
+      object smenu211: TMenuItem
+        Caption = 'Données Journalières'
+        OnClick = smenu211Click
+      end
+      object smenu1: TMenuItem
+        Caption = 'Edition Ephémérides'
+        OnClick = smenu1Click
+      end
+      object EditionPB0L01: TMenuItem
+        Caption = 'Edition P,B0,L0'
+        OnClick = EditionPB0L01Click
+      end
+      object EditionRotationsSynodiques1: TMenuItem
+        Caption = 'Edition Rotations Synodiques'
+        OnClick = EditionRotationsSynodiques1Click
+      end
+      object EditionParallaxeset12diamtres1: TMenuItem
+        Caption = 'Edition Parallaxes et 1/2 diamètres'
+        OnClick = EditionParallaxeset12diamtres1Click
+      end
+    end
+    object Lune1: TMenuItem
+      Caption = 'Lune'
+      object PositionLune1: TMenuItem
+        Caption = 'Position Lune'
+        OnClick = PositionLune1Click
+      end
+      object PhasesLune1: TMenuItem
+        Caption = 'Phases Lune'
+        OnClick = PhasesLune1Click
+      end
+      object EditionEphmrides1: TMenuItem
+        Caption = 'Edition Ephémérides'
+        OnClick = EditionEphmrides1Click
+      end
+      object EditionSynthseAnnuelle1: TMenuItem
+        Caption = 'Edition Synthèse Annuelle'
+        OnClick = EditionSynthseAnnuelle1Click
+      end
+      object DonnesPhysiques1: TMenuItem
+        Caption = 'Données Physiques'
+        OnClick = DonnesPhysiques1Click
+      end
+    end
+    object Plantes1: TMenuItem
+      Caption = 'Planètes'
+      object ElmentsdesOrbites1: TMenuItem
+        Caption = 'Eléments des Orbites'
+        OnClick = ElmentsdesOrbites1Click
+      end
+      object Ephmrides1: TMenuItem
+        Caption = 'Ephémérides'
+        OnClick = Ephmrides1Click
+      end
+      object LongitudesHliocentriques1: TMenuItem
+        Caption = 'Longitudes Héliocentriques'
+        OnClick = LongitudesHliocentriques1Click
+      end
+    end
+    object ObjetsMessier1: TMenuItem
+      Caption = 'Objets Messier'
+      object Etoilesvoisines1: TMenuItem
+        Caption = 'Etoiles voisines'
+        OnClick = Etoilesvoisines1Click
+      end
+      object Visibilitpourunedate1: TMenuItem
+        Caption = 'Visibilité pour une date'
+        OnClick = Visibilitpourunedate1Click
+      end
+      object Hauteuretazimuthuninstant1: TMenuItem
+        Caption = 'Hauteur et azimuth à un instant'
+        OnClick = Hauteuretazimuthuninstant1Click
+      end
+      object MenuItem1: TMenuItem
+        Caption = 'Conversion BDD'
+        Enabled = False
+        OnClick = MenuItem1Click
+      end
+    end
+    object CielProfond1: TMenuItem
+      Caption = 'Ciel Profond'
+      object HauteurAzimutpouruninstant1: TMenuItem
+        Caption = 'Hauteur/Azimut pour un instant'
+        OnClick = HauteurAzimutpouruninstant1Click
+      end
+      object MenuItem2: TMenuItem
+        Caption = 'Conversion BDD'
+        Enabled = False
+        OnClick = MenuItem2Click
+      end
+    end
+    object Divers: TMenuItem
+      Caption = 'Divers'
+      object Tempsrel1: TMenuItem
+        Caption = 'Temps réel'
+        OnClick = Tempsrel1Click
+      end
+    end
+  end
+  object Timer1: TTimer
+    OnTimer = Timer1Timer
+    left = 49
+    top = 120
+  end
+end

@@ -1,0 +1,118 @@
+object Form2: TForm2
+  Left = 409
+  Top = 200
+  Width = 435
+  Height = 350
+  Caption = 'Données Journalières Soleil'
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  object Label1: TLabel
+    Left = 24
+    Top = 24
+    Width = 65
+    Height = 13
+    Caption = 'Date et heure'
+  end
+  object Label2: TLabel
+    Left = 32
+    Top = 112
+    Width = 273
+    Height = 13
+    AutoSize = False
+    Caption = 'Label2'
+  end
+  object Label3: TLabel
+    Left = 32
+    Top = 128
+    Width = 273
+    Height = 13
+    AutoSize = False
+    Caption = 'Label2'
+  end
+  object Label4: TLabel
+    Left = 32
+    Top = 144
+    Width = 273
+    Height = 13
+    AutoSize = False
+    Caption = 'Label2'
+  end
+  object Label5: TLabel
+    Left = 32
+    Top = 160
+    Width = 273
+    Height = 13
+    AutoSize = False
+    Caption = 'Label2'
+  end
+  object Label6: TLabel
+    Left = 32
+    Top = 176
+    Width = 273
+    Height = 13
+    AutoSize = False
+    Caption = 'Label2'
+  end
+  object Label7: TLabel
+    Left = 32
+    Top = 192
+    Width = 273
+    Height = 13
+    AutoSize = False
+    Caption = 'Label2'
+  end
+  object Label8: TLabel
+    Left = 32
+    Top = 208
+    Width = 273
+    Height = 13
+    AutoSize = False
+    Caption = 'Label2'
+  end
+  object Label9: TLabel
+    Left = 32
+    Top = 224
+    Width = 273
+    Height = 13
+    AutoSize = False
+    Caption = 'Label2'
+  end
+  object Label10: TLabel
+    Left = 32
+    Top = 240
+    Width = 273
+    Height = 13
+    AutoSize = False
+    Caption = 'Label2'
+  end
+  object Button1: TButton
+    Left = 128
+    Top = 288
+    Width = 73
+    Height = 17
+    Caption = 'Quitter'
+    TabOrder = 0
+    OnClick = Button1Click
+  end
+  object Edit1: TEdit
+    Left = 104
+    Top = 24
+    Width = 161
+    Height = 21
+    TabOrder = 1
+    Text = 'Edit1'
+  end
+  object Button2: TButton
+    Left = 128
+    Top = 64
+    Width = 73
+    Height = 17
+    Caption = 'Calculer'
+    TabOrder = 2
+    OnClick = Button2Click
+  end
+end

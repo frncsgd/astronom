@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="11"/>
+    <BuildModes Active="Default"/>
+    <Units Count="28">
+      <Unit0>
+        <Filename Value="Astronomie.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <CursorPos Y="30"/>
+        <UsageCount Value="53"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="Unit1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="12" Y="238"/>
+        <UsageCount Value="53"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="Unit2.pas"/>
+        <IsPartOfProject Value="True"/>
+        <HasResources Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="39"/>
+        <CursorPos X="56" Y="66"/>
+        <UsageCount Value="53"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="Unit3.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form3"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="88"/>
+        <CursorPos X="24" Y="112"/>
+        <FoldState Value=" T1i603 T3iB09F"/>
+        <UsageCount Value="53"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="Unit4.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form4"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="179"/>
+        <CursorPos X="29" Y="188"/>
+        <UsageCount Value="53"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="AST_GEN.PAS"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="460"/>
+        <CursorPos X="11" Y="463"/>
+        <UsageCount Value="53"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="AST_FIC.PAS"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="6" Y="31"/>
+        <UsageCount Value="53"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="AST_SUN.PAS"/>
+        <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="360"/>
+        <CursorPos X="50" Y="366"/>
+        <UsageCount Value="53"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="AST_MESS.PAS"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="557"/>
+        <CursorPos X="39" Y="522"/>
+        <UsageCount Value="53"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="ast_dive.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Ast_dive"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="52"/>
+        <CursorPos X="22" Y="47"/>
+        <UsageCount Value="53"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="ast_moon.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Ast_Moon"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="5"/>
+        <CursorPos X="37" Y="11"/>
+        <UsageCount Value="53"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="ast_plan.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Ast_plan"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="2"/>
+        <CursorPos X="37" Y="10"/>
+        <UsageCount Value="53"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="AST_DEEP.PAS"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="190"/>
+        <CursorPos X="52" Y="211"/>
+        <UsageCount Value="53"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="Ast_star.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="53"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="Unit1.lfm"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="9"/>
+        <CursorPos X="36" Y="9"/>
+        <UsageCount Value="21"/>
+        <DefaultSyntaxHighlighter Value="LFM"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="Unit2.lfm"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="86"/>
+        <UsageCount Value="8"/>
+        <DefaultSyntaxHighlighter Value="LFM"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="AST_MESSIER.PAS"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="119"/>
+        <CursorPos X="76" Y="140"/>
+        <UsageCount Value="8"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="Unit4.lfm"/>
+        <ComponentName Value="Form4"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="73"/>
+        <CursorPos X="48" Y="82"/>
+        <UsageCount Value="16"/>
+        <DefaultSyntaxHighlighter Value="LFM"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="..\lcl\include\control.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="2724"/>
+        <CursorPos Y="2736"/>
+        <UsageCount Value="8"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="..\lcl\include\buttoncontrol.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="42"/>
+        <CursorPos Y="55"/>
+        <UsageCount Value="8"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="Unit1.lrs"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="8"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="ASTRONOM.PAS"/>
+        <UnitName Value="Astronom"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="66"/>
+        <CursorPos X="5" Y="108"/>
+        <UsageCount Value="17"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="CODAGE.PAS"/>
+        <UnitName Value="Codage"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="9"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="AST_CODA.PAS"/>
+        <UnitName Value="Ast_Codage"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="13"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="AST_GRAP.PAS"/>
+        <UnitName Value="Ast_Graph"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="9"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="..\lcl\dialogs.pp"/>
+        <UnitName Value="Dialogs"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="754"/>
+        <CursorPos X="10" Y="729"/>
+        <UsageCount Value="10"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="Unit3.lfm"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="10"/>
+        <DefaultSyntaxHighlighter Value="LFM"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="..\fpc\3.0.4\source\rtl\inc\systemh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1222"/>
+        <CursorPos X="11" Y="1243"/>
+        <UsageCount Value="10"/>
+      </Unit27>
+    </Units>
+    <JumpHistory Count="18" HistoryIndex="17">
+      <Position1>
+        <Filename Value="Astronomie.lpr"/>
+        <Caret Line="30" TopLine="14"/>
+      </Position1>
+      <Position2>
+        <Filename Value="Astronomie.lpr"/>
+        <Caret Line="30" TopLine="14"/>
+      </Position2>
+      <Position3>
+        <Filename Value="AST_MESS.PAS"/>
+        <Caret Line="262" Column="26" TopLine="239"/>
+      </Position3>
+      <Position4>
+        <Filename Value="AST_MESS.PAS"/>
+        <Caret Line="283" Column="52" TopLine="249"/>
+      </Position4>
+      <Position5>
+        <Filename Value="AST_SUN.PAS"/>
+        <Caret Line="162" Column="22" TopLine="140"/>
+      </Position5>
+      <Position6>
+        <Filename Value="AST_SUN.PAS"/>
+        <Caret Line="257" Column="16" TopLine="257"/>
+      </Position6>
+      <Position7>
+        <Filename Value="AST_MESS.PAS"/>
+        <Caret Line="287" Column="18" TopLine="281"/>
+      </Position7>
+      <Position8>
+        <Filename Value="AST_SUN.PAS"/>
+        <Caret Line="8"/>
+      </Position8>
+      <Position9>
+        <Filename Value="ast_dive.pas"/>
+        <Caret Line="8" Column="5" TopLine="4"/>
+      </Position9>
+      <Position10>
+        <Filename Value="ast_dive.pas"/>
+        <Caret Line="47" Column="22" TopLine="52"/>
+      </Position10>
+      <Position11>
+        <Filename Value="AST_SUN.PAS"/>
+        <Caret Line="10" Column="36"/>
+      </Position11>
+      <Position12>
+        <Filename Value="ast_plan.pas"/>
+        <Caret Line="10" Column="37" TopLine="2"/>
+      </Position12>
+      <Position13>
+        <Filename Value="AST_SUN.PAS"/>
+        <Caret Line="10" Column="27"/>
+      </Position13>
+      <Position14>
+        <Filename Value="AST_SUN.PAS"/>
+        <Caret Line="39" Column="32" TopLine="28"/>
+      </Position14>
+      <Position15>
+        <Filename Value="AST_SUN.PAS"/>
+        <Caret Line="43" Column="59" TopLine="36"/>
+      </Position15>
+      <Position16>
+        <Filename Value="AST_SUN.PAS"/>
+        <Caret Line="413" TopLine="400"/>
+      </Position16>
+      <Position17>
+        <Filename Value="AST_SUN.PAS"/>
+        <Caret Line="383" Column="29" TopLine="377"/>
+      </Position17>
+      <Position18>
+        <Filename Value="AST_SUN.PAS"/>
+        <Caret Line="360" TopLine="352"/>
+      </Position18>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="0" ActiveMode="default"/>
+    </RunParams>
+  </ProjectSession>
+  <Debugging>
+    <BreakPoints Count="1">
+      <Item1>
+        <Kind Value="bpkSource"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <Source Value="Unit4.lfm"/>
+        <Line Value="102"/>
+      </Item1>
+    </BreakPoints>
+  </Debugging>
+</CONFIG>
