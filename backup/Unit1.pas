@@ -5,7 +5,7 @@ unit Unit1;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   Buttons, StdCtrls, Menus, ExtCtrls,
   Unit2,Unit3,Unit4,AST_MESS,AST_FIC, AST_SUN,Ast_Moon,Ast_Plan,AST_DEEP,Ast_star;
 

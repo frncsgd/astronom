@@ -13,6 +13,7 @@ type
   { TForm4 }
 
   TForm4 = class(TForm)
+    Button2: TButton;
     Label12: TLabel;
     Touche10: TButton;
     Touche11: TButton;
@@ -39,6 +40,7 @@ type
     Label11: TLabel;
     Touche8: TButton;
     Touche9: TButton;
+    procedure Button2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure ListBox1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -105,6 +107,14 @@ begin
  mode_messier:=true;
  memo_mode_messier:=true;
  end;
+
+procedure TForm4.Button2Click(Sender: TObject);
+begin
+  {*Bouton valider*}
+   label11.caption:=label12.caption;
+   label12.caption:='';
+
+end;
 
 
 procedure TForm4.ListBox1Click(Sender: TObject);
@@ -361,9 +371,11 @@ end;
 
 procedure TForm4.Touche17Click(Sender: TObject);
 begin
-  label12.caption:='';
+  {*Bouton valider*}
+ label12.caption:='';
+ label1.visible:=true;
+ Button1.visible:=true;
 end;
-
 procedure TForm4.Touche7Click(Sender: TObject);
 begin
    label12.caption:=label12.Caption+'7';

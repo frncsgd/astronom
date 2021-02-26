@@ -1,7 +1,7 @@
 object Form4: TForm4
-  Left = 194
+  Left = 0
   Height = 546
-  Top = 67
+  Top = 133
   Width = 1019
   ActiveControl = Button1
   Caption = 'Suivi dobjet en temps réel'
@@ -353,6 +353,15 @@ object Form4: TForm4
     Font.Name = 'MS Sans Serif'
     ParentColor = False
     ParentFont = False
+  end
+  object Button2: TButton
+    Left = 561
+    Height = 53
+    Top = 335
+    Width = 225
+    Caption = 'Valider'
+    OnClick = Button2Click
+    TabOrder = 13
   end
   object Timer1: TTimer
     OnTimer = Timer1Timer
