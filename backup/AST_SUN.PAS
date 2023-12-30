@@ -7,7 +7,7 @@ Interface
 (* ajout ast_dive le 06/02/2021 pour usage fonction twilight heure nuit astronomique*)
 
 Uses LCLIntf, LCLType,SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls,AST_FIC,AST_GEN;
+  StdCtrls,AST_FIC,AST_GEN,math;
 
 
 procedure calc_soleil(jourjulien : real;var alpha:str8;var delta:real;var rayon:real;
@@ -97,7 +97,7 @@ begin
  angsize:=angsize*2;
  end;
 
-procedure angles_pbl(jjulien:real;var p,b0,l0 : real);
+procedure angles_pbl_OLD(jjulien:real;var p,b0,l0 : real);
 var
  t,delta,omega,bidon2,anomvraie,epsilon,lambda0,m,x,y,a,zeta1,zeta2 : real;
  bidon                          : str8;
@@ -123,6 +123,52 @@ begin
  p:=zeta1+zeta2;
 end;
 
+procedure angles_pbl(jd:real;var p,b0,l0 : real);
+(*source : view-source:https://www.bogan.ca/astro/sun/sunspots.html
+puis
+https://www.codeconvert.ai/java-to-pascal-converter*)
+var
+   theta, inc, k, t, t2, t3, M, Mr, C, sunL, v, omega, lngtd, lngtdr, diffk, oblr, tx, ty, x, y, Pr, B0r, etay, etax, eta, L0r, CarrNo: Double;
+   radian: Real;
+
+begin
+  radian := 180 / Pi;
+  theta := (jd - 2398220) * 360 / 25.38;
+  inc := 7.25 / radian;
+  k := (73.6667 + 1.3958333 * (jd - 2396758) / 36525) / radian;
+  t := (jd - 2451545) / 36525;
+  t2 := t * t;
+  t3 := t * t2;
+  L0 := 280.46645 + 36000.76983 * t + 0.0003032 * t2;
+  M := 357.52910 + 35999.05030 * t - 0.0001559 * t2 - 0.00000048 * t3;
+  Mr := M / radian;
+  C := (1.914600 - 0.004817 * t - 0.000014 * t2) * sin(Mr) + (0.019993 - 0.000101 * t) * sin(2 * Mr) + 0.000290 * sin(3 * Mr);
+  sunL := L0 + C;
+  v := M + C;
+  omega := 125.04 - 1934.136 * t;
+  lngtd := sunL - 0.00569 - 0.00478 * sin(omega / radian);
+  lngtdr := lngtd / radian;
+  diffk := lngtdr - k;
+  oblr := (23.4392911 - 0.0130042 * t - 0.0000164 * t2 + 0.0000504 * t3) / radian;
+  tx := -cos(lngtdr) * tan(oblr);
+  ty := -cos(diffk) * tan(inc);
+  x := arctan(tx);
+  y := arctan(ty);
+  Pr := x + y;
+  P := Pr * radian;
+  B0r := arcsin(sin(diffk) * sin(inc));
+  B0 := B0r * radian;
+  etay := -sin(diffk) * cos(inc);
+  etax := -cos(diffk);
+  eta := arctan2(etay, etax) * radian;      (*arctan2*)
+  L0 := eta - theta;
+  (*L0 := Trunc(L0);  *)
+  range0a360(l0,l0);
+  L0r := L0 / radian;
+  CarrNo := ((jd - 2398140.22710) / 27.2752316);
+
+end;
+
 procedure chap15(date:str10;heure:str8;var alpha:str8;var delta:real;var rayon:real;
                                        var p,b,l,parallaxe,angsize : real);
 var
@@ -142,7 +188,7 @@ var
  jjulien,num_crn : real;
 begin
  jjulien:=julien(date,heure);
- num_crn:=1690+(jjulien-2444235.34)/27.2753;
+ num_crn:=1690+(jjulien-2444235.34)/27.2752316;
  numero_crn:=num_crn;
 end;
 
@@ -357,6 +403,7 @@ var
  heure                   : str8;
  jjulien_dep,jjulien_arr,jjulien_inter : real;
  num_crn,jour,p,b,l      : real;
+ erreur                  : integer;
 
 begin
 
@@ -365,7 +412,7 @@ begin
  date1:='01/01/'+date1;
  heure:='00:00:00';
  num_crn:=int(numero_crn(date1,heure));
- jjulien_dep:=27.2753*(num_crn-1690)+2444235.34;
+ jjulien_dep:=27.2752316*(num_crn-1690)+2444235.34;
  jjulien_arr:=julien(date2,heure);
 
  assign(fichier,'ephcrn.txt');
@@ -381,14 +428,14 @@ begin
   begin
    angles_pbl(jjulien_dep,p,b,l);
    if l>180 then l:=l-360;
-   jjulien_dep:=jjulien_dep+l*27.2753/360;
+   jjulien_dep:=jjulien_dep+l*27.2752316/360;
    invjulien(jjulien_dep,date1,heure);
    jjulien_inter:=julien(date1,'00:00:00');
    val(copy(date1,1,2),jour,erreur);
    jour:=jour+jjulien_dep-jjulien_inter;
    writeln(fichier,num_crn:5:0,' ',date1:10,' ',heure:8,' ',jour:5:2);
    num_crn:=num_crn+1;
-   jjulien_dep:=27.2753*(num_crn-1690)+2444235.34;
+   jjulien_dep:=27.2752316*(num_crn-1690)+2444235.34;
   end;
  writeln(fichier,#12);
  close(fichier);
