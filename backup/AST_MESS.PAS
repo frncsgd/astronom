@@ -4,16 +4,14 @@ Unit AST_MESS;
 
 interface
 uses
-     LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+     LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls,AST_FIC,
      AST_GEN,
      AST_SUN,
-     ast_moon,
-     ast_plan, ast_star,
+     ast_plan,
      ast_dive;
 
 Function OrderMara(num_messier:byte) : byte;
-Procedure Messier;
 procedure Messier2;
 Procedure NearStars;
 Procedure ConversionMessier;
@@ -236,7 +234,7 @@ begin
  tsg(instant,heure,greenwich);
 
 
- chaine:=InputBox('Lever/Coucher des Objets de Messier', 'Trier par n°messier = 1 ou n°marathon = 2','1');
+ chaine:=InputBox('Lever/Coucher des Objets de Messier', 'Trier par num.messier = 1 ou num.marathon = 2','1');
  val(chaine,tri,erreur);
 
  if (tri<>1) and (tri<>2) then tri:=1;
@@ -253,34 +251,46 @@ begin
  writeln(fichier,'<head>');
  writeln(fichier,'<meta http-equiv="Content-Type"');
  writeln(fichier,'content="text/html; charset=iso-8859-1">');
- writeln(fichier,'<title>Visibilité des Objets Messier</title>');
+ writeln(fichier,'<title>Visibilite des Objets Messier</title>');
  writeln(fichier,'</head>');
 
 
-  writeln(fichier,'<p align="center"><font size="2">Caractéristiques Objets');
+  writeln(fichier,'<p align="center"><font size="2">Caracteristiques Objets');
   writeln(fichier,'de Messier le ',date,'</font></p>');
 
   if tri=1 then
-   writeln(fichier,'Par ordre de numéro Messier <BR><BR>')
+   writeln(fichier,'Par ordre de numero Messier <BR><BR>')
   else
-    writeln(fichier,'Par ordre de numéro Marathon <BR><BR>');
+    writeln(fichier,'Par ordre de numero Marathon <BR><BR>');
 
-  writeln(fichier,'<p align="center"><font size="2">Latitude ',global_latitude:5:2,'°');
-  writeln(fichier,'Longitude ',global_longitude:5:2,'°</font></p>');
+  writeln(fichier,'<p align="center"><font size="2">Latitude ',global_latitude:5:2,' deg.');
+  writeln(fichier,'Longitude ',global_longitude:5:2,'deg.</font></p>');
 
 
   writeln(fichier,'<p><font size="2">Informations Eclairage Soleil</font><br>');
 
- t:=julien(date,heure);
- calc_soleil(t,alpha,delta,rayon,longvraie,longvraie,longvraie,m,parallaxe,angsize);
+  hleversol:=heure;
 
- levercoucher(true,alpha,greenwich,global_latitude,global_longitude,delta,0,angsize,hleversol);
- levercoucher(false,alpha,greenwich,global_latitude,global_longitude,delta,0,angsize,hcouchersol);
+  for n:=1 to 10 do
+    begin
+     t:=julien(date,hleversol);
+     calc_soleil(t,alpha,delta,rayon,longvraie,longvraie,longvraie,m,parallaxe,angsize);
+     levercoucher(true,alpha,greenwich,global_latitude,global_longitude,delta,0,angsize,hleversol);
+    end;
 
- writeln(fichier,'Coucher à ',hcouchersol,'<BR>');
- writeln(fichier,'Lever  à ',hleversol,'<BR>');
 
- writeln(fichier,'Nuit astronomique a +/-',twilight(delta,global_latitude),'<BR>');
+  hcouchersol:=hleversol;
+  for n:=1 to 10 do
+    begin
+     t:=julien(date,hcouchersol);
+     calc_soleil(t,alpha,delta,rayon,longvraie,longvraie,longvraie,m,parallaxe,angsize);
+     levercoucher(false,alpha,greenwich,global_latitude,global_longitude,delta,0,-angsize,hcouchersol);
+    end;
+
+  writeln(fichier,'Coucher : ',hcouchersol,'<BR>');
+ writeln(fichier,'Lever  : ',hleversol,'<BR>');
+
+ writeln(fichier,'Nuit astronomique : +/-',twilight(delta,global_latitude),'<BR>');
 
  heuremindec(hleversol,hleversol2);
  heuremindec(hcouchersol,hcouchersol2);
@@ -292,8 +302,8 @@ begin
  heuredecmin(hleversol2,hleversol);
  heuredecmin(hcouchersol2,hcouchersol);
 
- writeln(fichier,'Debut Nuit Astronomique à ',hcouchersol,'<BR>');
- writeln(fichier,'Fin Nuit Astromique  à ',hleversol,'<BR>');
+ writeln(fichier,'Debut Nuit Astronomique : ',hcouchersol,'<BR>');
+ writeln(fichier,'Fin Nuit Astromique  : ',hleversol,'<BR>');
  writeln(fichier,'<BR>');
 
  writeln(fichier,'<table border="1" width="100%">');
@@ -304,12 +314,12 @@ begin
  writeln(fichier,'<td>Type</td>');
  writeln(fichier,'<td>Sous-Type</td>');
  writeln(fichier,'<td>Alpha</td>');
- writeln(fichier,'<td>Delta degr‚s</td>');
+ writeln(fichier,'<td>Delta deg.</td>');
  writeln(fichier,'<td>Magnitude</td>');
  writeln(fichier,'<td>Dimensions</td>');
  writeln(fichier,'<td>Distance</td>');
  writeln(fichier,'<td>Lever</td>');
- writeln(fichier,'<td>Méridien</td>');
+ writeln(fichier,'<td>Meridien</td>');
  writeln(fichier,'<td>Coucher</td>');
  writeln(fichier,'<td>Marathon</td>');
  writeln(fichier,'</tr>');
@@ -341,7 +351,7 @@ begin
      meridien(vdat.ad,greenwich,global_longitude,hmeridien);
      if 90-vdat.delta>global_latitude then
       begin
-       levercoucher(false,vdat.ad,greenwich,global_latitude,global_longitude,vdat.delta,0,angsize,hcoucher);
+       levercoucher(false,vdat.ad,greenwich,global_latitude,global_longitude,vdat.delta,0,-angsize,hcoucher);
       end
       else
       begin
@@ -389,8 +399,8 @@ begin
     writeln(fichier,'   C  Binary star            (M40)<BR>');
 
 
-   writeln(fichier,'<p>Document calculé par ASTRONOM/F.GOUYAUD');
-   writeln(fichier,'d''après les données des objets messier de Hartmut Frommert,');
+   writeln(fichier,'<p>Document calcule par ASTRONOM/F.GOUYAUD');
+   writeln(fichier,'d''apres les donnees des objets messier de Hartmut Frommert,');
    writeln(fichier,'Chris Kronberg et Guy McArthur <a');
    writeln(fichier,'href="http://www.seds.org/messier" target="blank">http://www.seds.org/messier/');
    writeln(fichier,'</a></p>');
@@ -399,7 +409,7 @@ begin
    writeln(fichier,'</html>');
    closefile(fichier);
 
-   MessageDlg('Fin de génération, cliquez sur OK pour voir le résultat',mtInformation, [mbOK], 0);
+   MessageDlg('Fin de generation, cliquez sur OK pour voir le resultat',mtInformation, [mbOK], 0);
    if tri=1 then  OpenDocument('messier1.htm') { *Converti depuis ShellExecute* } else  OpenDocument('messier2.htm'); { *Converti depuis ShellExecute* }
 
   end;
@@ -416,7 +426,7 @@ var
  memoecart	: real;
 begin
 
- (*ConversionBright; Pour génération fichier brightca.dat*)
+ (*ConversionBright; Pour generation fichier brightca.dat*)
 
  assign(fdat,'messicat.dat');
  reset(fdat);
@@ -437,8 +447,8 @@ begin
  writeln(fichier,'<p align="center"><font size="2">ETOILE BRILLANTE LA PLUS');
  writeln(fichier,'PROCHE DE CHAQUE OBJET MESSIER</font></p>');
 
- writeln(fichier,'<p>Pour chaque objet Messier est calculé l''étoile de magnitude&lt;=3.0');
- writeln(fichier,'la plus proche et son écart angulaire avec l''objet Messier.</p>');
+ writeln(fichier,'<p>Pour chaque objet Messier est calcule l''etoile de magnitude&lt;=3.0');
+ writeln(fichier,'la plus proche et son ecart angulaire avec l''objet Messier.</p>');
 
  writeln(fichier,'<table border="1" width="100%">');
  writeln(fichier,'<tr>');
@@ -498,8 +508,8 @@ begin
  close(fdat2);
 
  writeln(fichier,'</table>');
- writeln(fichier,'<p>Document calculé avec ASTRONOM/F.GOUYAUD');
- writeln(fichier,'d''après les données des objets messier de Hartmut Frommert,');
+ writeln(fichier,'<p>Document calcule avec ASTRONOM/F.GOUYAUD');
+ writeln(fichier,'d''après les donnees des objets messier de Hartmut Frommert,');
  writeln(fichier,'Chris Kronberg et Guy McArthur <a');
  writeln(fichier,'href="http://www.seds.org/messier" target="blank">http://www.seds.org/messier/');
  writeln(fichier,'</a></p>');
@@ -509,253 +519,13 @@ begin
  writeln(fichier,'</html>');
  closefile(fichier);
 
- MessageDlg('Fin de génération, cliquez sur OK pour voir le résultat',mtInformation, [mbOK], 0);
+ MessageDlg('Fin de generation, cliquez sur OK pour voir le resultat',mtInformation, [mbOK], 0);
   OpenDocument('messier3.htm'); { *Converti depuis ShellExecute* }
 
 end;
 
-procedure Hautaz;
-var
-  chaine 	: string;
-  date		: str10;
-  heure		: str8;
-  hmeridien     : str8;
-  hcoucher	: str8;
-  hleversol	: str8;
-  hcouchersol	: str8;
-  instant 	: real;
-  greenwich	: real;
-  hauteur	: real;
-  z		: real;
-  delta		: real;
-  rayon		: real;
-  t         	: real;
-  longvraie 	: real;
-  m         	: real;
-  parallaxe	: real;
-  angsize	: real;
-  hmini		: integer;
- fdat : file of Messier_cat;
- vdat : messier_cat;
- n	: integer;
- tri	: integer;
- fichier : text;
-
- choix	: integer;
- hleversol2 : real;
- hcouchersol2 : real;
- twilight2	: real;
- alpha		: str8;
- alphalune	: str8;
- deltalune	: real;
- lambda		: real;
- a1,a2,toto		: real;
- ecartlune	: real;
-begin
- hmini:=10;
- {cadre;
- titre('Positions Azimutales des objets de Messier');
-
- gotoxy(4,4);
- write('Date ? ');
- saisstr(false,false,false,10,datesysteme,chaine);
- date:=chaine;
-
-  gotoxy(4,6);
- write('Heure ? ');
- saisstr(false,false,false,8,'00:00:00',chaine);
- heure:=chaine;
-
- instant:=julien(date,'00:00:00');
- tsg(instant,'00:00:00',greenwich);
-
- gotoxy(4,8);
- write('Latitude en Degr‚s ? ');
- saisreal(6,2,latitude,latitude);
-
- gotoxy(4,10);
- write('Longitude en Degr‚s ? (+ vers Est)');
- saisreal(6,2,longitude,longitude);
-
- gotoxy(4,12);
- write('Hauteur mini ? ');
- saisint(2,15,hmini);
-
- assign(fdat,'messicat.dat');
- reset(fdat);
-
- assign(fichier,'messhaz.htm');
-
- rewrite(fichier);
-
- writeln(fichier,'<html>');
- writeln(fichier,'<head>');
- writeln(fichier,'<meta http-equiv="Content-Type"');
- writeln(fichier,'content="text/html; charset=iso-8859-1">');
- writeln(fichier,'<title>Positions des Objets Messier</title>');
- writeln(fichier,'</head>');
-
-  writeln(fichier,'<p align="center"><font size="2">Hauteur et Azimut des Objets');
-  writeln(fichier,'de Messier le ',date,' à ',heure,' <BR> Hauteur mini : ',hmini, ' degres </font></p>');
 
 
-  writeln(fichier,'<p align="center"><font size="2">Latitude ',latitude:5:2,'°');
-  writeln(fichier,'Longitude ',longitude:5:2,'°</font></p>');
 
 
-  writeln(fichier,'<p><font size="2">Informations Eclairage Soleil</font><br>');
-
- t:=julien(date,'00:00:00');
- calc_soleil(t,alpha,delta,rayon,longvraie,longvraie,longvraie,m,parallaxe,angsize);
-
- levercoucher(true,alpha,greenwich,latitude,longitude,delta,0,hleversol);
- levercoucher(false,alpha,greenwich,latitude,longitude,delta,0,hcouchersol);
-
-
- writeln(fichier,'Nuit astronomique a +/-',twilight(delta,latitude),'<BR>');
-
- heuremindec(hleversol,hleversol2);
- heuremindec(hcouchersol,hcouchersol2);
- writeln(fichier,'Coucher à ',hcouchersol,'<BR>');
- writeln(fichier,'Lever  à ',hleversol,'<BR>');
- heuremindec(twilight(delta,latitude),twilight2);
-
- hleversol2:=hleversol2-twilight2;
- hcouchersol2:=hcouchersol2+twilight2;
-
- heuredecmin(hleversol2,hleversol);
- heuredecmin(hcouchersol2,hcouchersol);
-
-
- writeln(fichier,'Debut Nuit Astronomique à ',hcouchersol,'<BR>');
- writeln(fichier,'Fin Nuit Astromique  à ',hleversol,'<BR>');
- writeln(fichier,'<BR>');
-
- coordlune(date,heure,a1,a2,lambda,deltalune,alphalune);
- writeln(Fichier,'Lune coeff=',lambda:3:2,' alpha=',alphalune,' et delta=',deltalune:6:2);
- writeln(fichier,'<BR>');
-
- writeln(fichier,'<table border="1" width="100%">');
- writeln(fichier,'<tr>');
- writeln(fichier,'<td>Messier</td>');
- writeln(fichier,'<td>NGC</td>');
- writeln(fichier,'<td>Constellation</td>');
- writeln(fichier,'<td>Type</td>');
- writeln(fichier,'<td>Sous-Type</td>');
- writeln(fichier,'<td>Alpha</td>');
- writeln(fichier,'<td>Delta degr‚s</td>');
- writeln(fichier,'<td>Magnitude</td>');
- writeln(fichier,'<td>Dimensions</td>');
- writeln(fichier,'<td>Distance</td>');
- writeln(fichier,'<td>Hauteur</td>');
- writeln(fichier,'<td>Azimut</td>');
- writeln(fichier,'<td>Marathon</td>');
- writeln(fichier,'<td>Ec.Lune</td>');
- writeln(fichier,'</tr>');
-
- for n:=1 to 110 do
-  begin
-   read(fdat,vdat);
-
-   Equatorial_to_Horizontal(instant,heure,0,vdat.ad,latitude,longitude,vdat.delta,hauteur,z);
-
-   gotoxy(4,14);
-   write('M',vdat.num_messier, 'Hauteur = ',hauteur:3:2,' Azimut=',z:3:2);
-
-   if hauteur>=hmini then
-    begin
-     writeln(fichier,'<tr>');
-     writeln(fichier,'<td>', vdat.num_messier ,'</td>');
-     writeln(fichier,'<td>', vdat.num_ngc ,'</td>');
-     writeln(fichier,'<td>', vdat.constellation ,'</td>');
-     writeln(fichier,'<td>', vdat.TypObj ,'</td>');
-     writeln(fichier,'<td>', vdat.SType ,'</td>');
-     writeln(fichier,'<td>', vdat.ad ,'</td>');
-     writeln(fichier,'<td>', vdat.delta:6:1 ,'</td>');
-     writeln(fichier,'<td>', vdat.magnitude:4:1 ,'</td>');
-     writeln(fichier,'<td>', vdat.diametre ,'</td>');
-     writeln(fichier,'<td>', vdat.distance:6:2 ,'</td>');
-
-     writeln(fichier,'<td>',hauteur:3:2 ,'</td>');
-     writeln(fichier,'<td>', z:3:2 ,'</td>');
-     writeln(fichier,'<td>', ordermara(vdat.num_messier) ,'</td>');
-     ecart(vdat.ad,vdat.delta,alphalune,deltalune,ecartlune);
-     writeln(fichier,'<td>',ecartlune:5:1,'</td>');
-     writeln(fichier,'</tr>');
-    end;
-   end;
-
-  close(fdat);
-
-    writeln(fichier,'</table>');
-
-    writeln(fichier,'Definition des Types: <BR>');
-    writeln(fichier,'   1  Open Cluster<BR>');
-    writeln(fichier,'   2  Globular Cluster<BR>');
-    writeln(fichier,'   3  Planetary Nebula<BR>');
-    writeln(fichier,'   4  Diffuse Nebula<BR>');
-    writeln(fichier,'   5  Spiral Galaxy<BR>');
-    writeln(fichier,'   6  Elliptical Galaxy<BR>');
-    writeln(fichier,'   7  Irregular Galaxy       (M82)<BR>');
-    writeln(fichier,'   8  Lenticular (S0) Galaxy<BR>');
-    writeln(fichier,'   8  Lenticular (S0) Galaxy<BR>');
-    writeln(fichier,'   9  Supernova Remnant      (M1)<BR>');
-    writeln(fichier,'   A  System of 4 stars or Asterism (M73)<BR>');
-    writeln(fichier,'   B  Milky Way Patch        (M24)<BR>');
-    writeln(fichier,'   C  Binary star            (M40)<BR>');
-
-
-   writeln(fichier,'<p>Document calculé et préparé par <a');
-   writeln(fichier,'href="mailto:frangou2000@yahoo.fr">François GOUYAUD</a>');
-   writeln(fichier,'d''après les données des objets messier de Hartmut Frommert,');
-   writeln(fichier,'Chris Kronberg et Guy McArthur <a');
-   writeln(fichier,'href="http://www.seds.org/messier" target="blank">http://www.seds.org/messier/');
-   writeln(fichier,'</a></p>');
-
-     writeln(fichier,'</body>');
-     writeln(fichier,'</html>');
-     close(fichier);
-
-    gotoxy(4,14);
-    write('Fin de g‚n‚ration, le fichier est visible avec votre butineur internet ');
-    gotoxy(4,15);
-    write('dans c:\calcast\messhaz.htm');
-    pauseclav;
-
-  }
-
-end;
-
-
-procedure messier;
-var
- quitter	: boolean;
-
- choix		: integer;
-
-  begin
-  { quitter:=false;
-   while not quitter do
-    begin
-
-   cadre;
-   Titre('Utilitaire Objets Messier');
-
-   gotoxy(4,4);
-   option[1]:='Etoiles Voisines';
-   option[2]:='Visibilit‚ pour une date';
-   option[3]:='Hauteur/Azimut pour un instant';
-   option[4]:='Conversion Fichier Messier.dat';
-   option[5]:='Quitter';
-
-   choixligne(5,option,choix);
-   case choix of
-    1 : nearstars;
-    2 : messier2;
-    3 : hautaz;
-    {4 : conversionMessier;}
-    {5 : quitter:=true;
-   end;
-  end;}
- end;
  end.

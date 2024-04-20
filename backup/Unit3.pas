@@ -57,10 +57,7 @@ procedure TForm3.FormCreate(Sender: TObject);
 var
  chaine : string;
 begin
-
-
-
- edit1.text:=FormatDateTime('dd/mm/yyyy hh:mm:ss',Now);
+       edit1.text:=FormatDateTime('dd/mm/yyyy hh:mm:ss',Now);
  end;
 
 procedure TForm3.Button2Click(Sender: TObject);
@@ -128,28 +125,28 @@ hmini:=5;
  writeln(fichier,'</head>');
 
   writeln(fichier,'<p align="center"><font size="2">Hauteur et Azimut des Objets');
-  writeln(fichier,'de Messier le ',date,' à ',heure,' <BR> Hauteur mini : ',hmini, ' degres </font></p>');
+  writeln(fichier,'de Messier le ',date,' - ',heure,' <BR> Hauteur mini : ',hmini, ' degres </font></p>');
 
 
-  writeln(fichier,'<p align="center"><font size="2">Latitude ',global_latitude:5:2,'°');
-  writeln(fichier,'Longitude ',global_longitude:5:2,'°</font></p>');
+  writeln(fichier,'<p align="center"><font size="2">Latitude ',global_latitude:5:2,'deg.');
+  writeln(fichier,'Longitude ',global_longitude:5:2,'deg.</font></p>');
 
 
   writeln(fichier,'<p><font size="2">Informations Eclairage Soleil</font><br>');
 
- t:=julien(date,'00:00:00');
+ t:=julien(date,heure);
  calc_soleil(t,alpha,delta,rayon,longvraie,longvraie,longvraie,m,parallaxe,angsize);
 
  levercoucher(true,alpha,greenwich,global_latitude,global_longitude,delta,0,angsize,hleversol);
- levercoucher(false,alpha,greenwich,global_latitude,global_longitude,delta,0,angsize,hcouchersol);
+ levercoucher(false,alpha,greenwich,global_latitude,global_longitude,delta,0,-angsize,hcouchersol);
 
 
- writeln(fichier,'Nuit astronomique a +/-',twilight(delta,global_latitude),'<BR>');
+ writeln(fichier,'Nuit astronomique : +/-',twilight(delta,global_latitude),'<BR>');
 
  heuremindec(hleversol,hleversol2);
  heuremindec(hcouchersol,hcouchersol2);
- writeln(fichier,'Coucher à ',hcouchersol,'<BR>');
- writeln(fichier,'Lever  à ',hleversol,'<BR>');
+ writeln(fichier,'Coucher : ',hcouchersol,'<BR>');
+ writeln(fichier,'Lever  : ',hleversol,'<BR>');
  heuremindec(twilight(delta,global_latitude),twilight2);
 
  hleversol2:=hleversol2-twilight2;
@@ -159,11 +156,11 @@ hmini:=5;
  heuredecmin(hcouchersol2,hcouchersol);
 
 
- writeln(fichier,'Debut Nuit Astronomique à ',hcouchersol,'<BR>');
- writeln(fichier,'Fin Nuit Astromique  à ',hleversol,'<BR>');
+ writeln(fichier,'Debut Nuit Astronomique : ',hcouchersol,'<BR>');
+ writeln(fichier,'Fin Nuit Astromique : ',hleversol,'<BR>');
  writeln(fichier,'<BR>');
 
- coordlune(date,heure,a1,a2,lambda,deltalune,alphalune);
+ coordlune(date,hcouchersol2,a1,a2,lambda,deltalune,alphalune);
  writeln(Fichier,'Lune coeff=',lambda:3:2,' alpha=',alphalune,' et delta=',deltalune:6:2);
  writeln(fichier,'<BR>');
 
@@ -175,7 +172,7 @@ hmini:=5;
  writeln(fichier,'<td>Type</td>');
  writeln(fichier,'<td>Sous-Type</td>');
  writeln(fichier,'<td>Alpha</td>');
- writeln(fichier,'<td>Delta degr‚s</td>');
+ writeln(fichier,'<td>Delta deg.</td>');
  writeln(fichier,'<td>Magnitude</td>');
  writeln(fichier,'<td>Dimensions</td>');
  writeln(fichier,'<td>Distance</td>');
@@ -237,9 +234,9 @@ hmini:=5;
     writeln(fichier,'   C  Binary star            (M40)<BR>');
 
 
-   writeln(fichier,'<p>Document calculé et préparé par <a');
-   writeln(fichier,'href="mailto:frangou2000@yahoo.fr">François GOUYAUD</a>');
-   writeln(fichier,'d''après les données des objets messier de Hartmut Frommert,');
+   writeln(fichier,'<p>Document calcule et prepare par <a');
+   writeln(fichier,'href="mailto:frangou2000@yahoo.fr">Francois GOUYAUD</a>');
+   writeln(fichier,'d''apres les donnees des objets messier de Hartmut Frommert,');
    writeln(fichier,'Chris Kronberg et Guy McArthur <a');
    writeln(fichier,'href="http://www.seds.org/messier" target="blank">http://www.seds.org/messier/');
    writeln(fichier,'</a></p>');
