@@ -139,9 +139,9 @@ var
  chaine3: string;
  valeur	: real;
 begin
- assign(fdat,'c:\calcast\messicat.dat');
+ assign(fdat,'messicat.dat');
  rewrite(fdat);
- assign(ftext,'c:\calcast\messier.dat');
+ assign(ftext,'messier.dat');
  reset(ftext);
  while not eof(ftext) do
   begin
@@ -509,7 +509,7 @@ begin
 
  writeln(fichier,'</table>');
  writeln(fichier,'<p>Document calcule avec ASTRONOM/F.GOUYAUD');
- writeln(fichier,'d''après les donnees des objets messier de Hartmut Frommert,');
+ writeln(fichier,'d''apres les donnees des objets messier de Hartmut Frommert,');
  writeln(fichier,'Chris Kronberg et Guy McArthur <a');
  writeln(fichier,'href="http://www.seds.org/messier" target="blank">http://www.seds.org/messier/');
  writeln(fichier,'</a></p>');

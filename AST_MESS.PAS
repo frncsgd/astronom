@@ -139,9 +139,9 @@ var
  chaine3: string;
  valeur	: real;
 begin
- assign(fdat,'c:\calcast\messicat.dat');
+ assign(fdat,'messicat.dat');
  rewrite(fdat);
- assign(ftext,'c:\calcast\messier.dat');
+ assign(ftext,'messier.dat');
  reset(ftext);
  while not eof(ftext) do
   begin
@@ -426,12 +426,12 @@ var
  memoecart	: real;
 begin
 
- (*ConversionBright; Pour generation fichier brightca.dat*)
+ (*ConversionBright; Pour generation fichier BRIGHTCA.DAT*)
 
  assign(fdat,'messicat.dat');
  reset(fdat);
 
- assign(fdat2,'brightca.dat');
+ assign(fdat2,'BRIGHTCA.DAT');
  reset(fdat2);
 
  assign(fichier,'messier3.htm');

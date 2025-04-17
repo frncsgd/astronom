@@ -152,8 +152,8 @@ begin
  reset(fdat);
   except
    rewrite(fdat);
-   vdat.latitude:=45.374076;
-   vdat.longitude:=4.790087;
+   vdat.latitude:=45.3742;
+   vdat.longitude:=4.79053;
    vdat.decalagehor:=2;
    write(fdat,vdat);
    closefile(fdat);
@@ -164,9 +164,9 @@ begin
  global_longitude:=vdat.longitude;
  Global_DecalageTu:=vdat.decalagehor;
 
- str(vdat.latitude:2:2,chaine);
+ str(vdat.latitude:2:4,chaine);
  edit1.text:=chaine;
- str(vdat.longitude:2:2,chaine);
+ str(vdat.longitude:2:4,chaine);
  edit2.text:=chaine;
  str(vdat.decalagehor,chaine);
  edit3.text:=chaine;

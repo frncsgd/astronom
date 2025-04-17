@@ -27,9 +27,9 @@ var
  valeur	: real;
  chaine2: string;
 begin
- assign(ftext,'agctout.txt');
+ assign(ftext,'AGCTOUT.TXT');
  reset(ftext);
- assign(fdat,'cata1.dat');
+ assign(fdat,'CATA1.dat');
  rewrite(fdat);
  while not eof(ftext) do
   begin
@@ -120,7 +120,7 @@ chaine:=InputBox('Ciel Profond', 'Magnitude Maxi', '10');
 val(chaine,magmax,erreur);
 
  
- assign(fdat,'cata1.dat');
+ assign(fdat,'CATA1.dat');
  reset(fdat);
 
  assign(fichier,'deephaz.htm');
