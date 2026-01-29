@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <Compiler Value="/usr/bin/fpc" Date="1704440408"/>
-  <Params Value=" -MDelphi -Scghi -Cg -O1 -l -vewnhibq -Fu/home/frncs/.lazarus/lib/units/x86_64-linux/gtk2 -Fu/home/frncs/.lazarus/lib/LCLBase/units/x86_64-linux -Fu/home/frncs/.lazarus/lib/freetypelaz/lib/x86_64-linux -Fu/usr/lib/lazarus/3.0/components/lazutils/lib/x86_64-linux -Fu/usr/lib/lazarus/3.0/packager/units/x86_64-linux -Fu/home/frncs/Documents/GitHub/astronom/ -o/home/frncs/Documents/GitHub/astronom/Astronomie -dLCL -dLCLgtk2 -dBorland -dVer150 -dDelphi7 -dCompiler6_Up -dPUREPASCAL Astronomie.lpr"/>
+  <Compiler Value="C:\Logiciels\Lazarus\fpc\3.2.2\bin\x86_64-win64\fpc.exe" Date="1533567158"/>
+  <Params Value="-MDelphi -Scghi -O1 -WG -l -vewnhibq -FuC:\Users\Utilisateur\Documents\GitHub\astronom\ -FuC:\Logiciels\Lazarus\lcl\units\x86_64-win64\win32 -FuC:\Logiciels\Lazarus\lcl\units\x86_64-win64 -FuC:\Logiciels\Lazarus\components\freetype\lib\x86_64-win64 -FuC:\Logiciels\Lazarus\components\lazutils\lib\x86_64-win64 -FuC:\Logiciels\Lazarus\packager\units\x86_64-win64 -oC:\Users\Utilisateur\Documents\GitHub\astronom\Astronomie.exe -dLCL -dLCLwin32 -dBorland -dVer150 -dDelphi7 -dCompiler6_Up -dPUREPASCAL Astronomie.lpr"/>
 </CONFIG>
