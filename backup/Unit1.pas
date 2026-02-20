@@ -7,7 +7,8 @@ interface
 uses
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   Buttons, StdCtrls, Menus, ExtCtrls,
-  Unit2,Unit3,Unit4,AST_MESS,AST_FIC, AST_SUN,Ast_Moon,Ast_Plan,AST_DEEP,Ast_star;
+  Unit2,Unit3,Unit4,AST_MESS,AST_FIC, AST_SUN,Ast_Moon,Ast_Plan,AST_DEEP,Ast_star,
+  AST_jupitermoons;
 
 type
 
@@ -20,6 +21,7 @@ type
     MainMenu1: TMainMenu;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
     tata: TMenuItem;
     Menu21: TMenuItem;
     Edit1: TEdit;
@@ -56,6 +58,7 @@ type
     procedure Button2Click(Sender: TObject);
     procedure MenuItem1Click(Sender: TObject);
     procedure MenuItem2Click(Sender: TObject);
+    procedure MenuItem3Click(Sender: TObject);
     procedure tataClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure smenu211Click(Sender: TObject);
@@ -132,6 +135,19 @@ end;
 procedure TForm1.MenuItem2Click(Sender: TObject);
 begin
   conversiondeep;
+end;
+
+procedure TForm1.MenuItem3Click(Sender: TObject);
+//Fait le 19/2/2026
+var
+  //fichier:text;
+  jup : tjupiter;
+  upcomingStr : string;
+ begin
+    jup.create;
+    upcomingStr := upcomingEvents( jup, now,24);
+    MessageDlg('Fin de génération, cliquer sur OK pour voir le résultat',mtInformation, [mbOK], 0);
+    OpenDocument('galileens.txt'); { *Converti depuis ShellExecute* }
 end;
 
 procedure TForm1.tataClick(Sender: TObject);
