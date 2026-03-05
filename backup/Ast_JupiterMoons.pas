@@ -37,7 +37,7 @@ type
   TJupiter = class
   private
     const NUM_MOONS = 4;
-
+    const p = pi/180;
     var
       curdate: TDateTime;        { javascript Date object equivalent }
       d: Double;                 { days since epoch, 1899 Dec 31 12h ET }
@@ -154,8 +154,9 @@ end;
 
 procedure TJupiter.setDate(initDate: TDateTime);
 var
-  V, M, N, J, A, B, K, R, r_vec, lambda: Double;
-begin
+  V, M, N, J, A, B, K, R, r_vec, lambda,deltaT: Double;
+  year : Integer;
+  begin
   { Calculate the position of Jupiter's central meridian,
     and the corresponding moonAngle and moonDist arrays;
     and system I and system II longitudes;
@@ -166,29 +167,98 @@ begin
   { First, get the number of days since 1899 Dec 31 12h ET. }
   curdate := initDate;
   { JS: getJulianDate(initDate) - 2415020 }
-  d := getJulianDate(initDate) - 2415020; { days since 1899 Dec 31 12h ET }
+  d := getJulianDate(initDate) - 2451545.0; { days since January 1.5, year 2000 }
+
+  {Appliquer une correction DeltaT
+  cf  https://github.com/cran/galisats/blob/master/R/galilean_satellites.R
+  calculate delta-T (in seconds) for any year between 0 to 3000
+  aussi dans https://github.com/soniakeys/meeus}
+  
+  year:=2026;
+   
+    if (year < 500) then
+	 begin
+        deltat := 10583.6 - 1014.41 * (year / 100) + 33.78311 * power(year / 100,2) - 5.952053 * power(year / 100,3) - 0.1798452 * power(year / 100,4) + 0.022174192 * power(year / 100,5) + 0.0090316521 * power(year / 100,6);
+     end
+	 else if (year < 1600) then
+	  begin
+        deltat := 1574.2 - 556.01 * ((year - 1000) / 100) + 71.23472 * power((year - 1000) / 100,2) + 0.319781 * power((year - 1000) / 100,3) -0.8503463 * power((year - 1000) / 100,4) - 0.005050998 * power((year - 1000) / 100,5) +0.0083572073 * power((year - 1000) / 100,6);
+	 end
+     else if (year < 1700) then
+	 begin
+        deltat := 120 - 0.9808 * (year - 1600) - 0.01532 * power(year - 1600,2) +power(year - 1600,3) / 7129;
+    end
+	 else if (year < 1800) then
+	 begin
+        deltat := 8.83 + 0.1603 * (year - 1700) - 0.0059285 * power(year - 1700,2) + 0.00013336 * power(year - 1700,3)- power(year - 1700,4) / 1174000;
+    end
+	 else if (year < 1860) then
+	  begin
+        deltat := 13.72 - 0.332447 * (year - 1800) + 0.0068612 * power(year - 1800,2) +0.0041116 * power(year - 1800,3) - 0.00037436 * power(year - 1800,4) +0.0000121272 * power(year - 1800,5) - 0.0000001699 * power(year - 1800,6) +0.000000000875 * power(year - 1800,7);
+      end
+	  else if (year < 1900) then
+	  begin
+        deltat := 7.62 + 0.5737 * (year - 1860) - 0.251754 * power(year - 1860,2) + 0.01680668 * power(year - 1860,3) - 0.0004473624 * power(year - 1860,4) + power(year - 1860,5) / 233174;
+      end
+	  else if (year < 1920) then
+	  begin
+        deltat := -2.79 + 1.494119 * (year - 1900) - 0.0598939 * power(year - 1900,2) +0.0061966 * power(year - 1900,3) - 0.000197 * power(year - 1900,4);
+      end
+	  else if (year < 1941) then
+	  begin
+        deltat :=  21.20 + 0.84493 * (year - 1920) - 0.076100 * power(year - 1920,2) +0.0020936 * power(year - 1920,3);
+      end
+	  else if (year < 1961) then
+	  begin
+        deltat :=  29.07 + 0.407 * (year - 1950) - power(year - 1950,2) / 233 +power(year - 1950,3) / 2547;
+      end else if (year < 1986) then
+	  begin
+        deltat :=  45.45 + 1.067 * (year - 1975) - power(year - 1975,2) / 260 -power(year - 1975,3) / 718;
+     end
+	 else if (year < 2005) then
+	 begin
+        deltat :=  63.86 + 0.3345 *(year- 2000) - 0.060374 * power(year - 2000,2) +0.0017275 * power(year - 2000,3) + 0.000651814 * power(year - 2000,4) +0.00002373599 * power(year - 2000,5);
+    end
+	else if (year < 2050) then
+	begin
+        {75.074584000000002 secondes}
+        deltat :=  62.92 + 0.32217 * (year - 2000) + 0.005589 * power(year - 2000,2);
+
+    end 
+	else if (year < 2150) then
+	begin
+        deltat :=  -20 + 32 * power((year - 1820) / 100,2) - 0.5628 * (2150 - year);
+    end
+	else 
+	begin
+        deltat :=  -20 + 32 * power((year - 1820) / 100,2);
+    end;
+
+
+   d:=d+(deltat/(3600*24));
+
 
   { Argument for the long-period term in the motion of Jupiter: }
-  V := angle((134.63 + 0.00111587 * d) * Pi / 180);
+  V := angle((172.74* + 0.00111588 * d) * p);
   
   { Mean anomalies of Earth and Jupiter: }
-  M := angle((358.476 + 0.9856003 * d) * Pi / 180);
-  N := angle((225.328 + 0.0830853 * d + 0.33 * Sin(V)) * Pi / 180);
+  M := angle((357.529 + 0.9856003 * d) * p);
+  N := angle((20.02 + 0.0830853 * d + 0.329 * Sin(V)) * p);
   
   { Diff between the mean heliocentric longitudes of Earth & Jupiter: }
-  J := angle((221.647 + 0.9025179 * d - 0.33 * Sin(V)) * Pi / 180);
+  J := angle((66.115 + 0.9025179 * d - 0.329 * Sin(V)) * p);
   
   { Equations of the center of Earth and Jupiter: }
-  A := angle((1.916 * Sin(M) + 0.020 * Sin(2 * M)) * Pi / 180);
-  B := angle((5.552 * Sin(N) + 0.167 * Sin(2 * N)) * Pi / 180);
+  A := angle((1.915 * Sin(M) + 0.020 * Sin(2 * M)) * p);
+  B := angle((5.555 * Sin(N) + 0.168 * Sin(2 * N)) * p);
   
   K := angle(J + A - B);
   
   { Distances are specified in AU: }
   { Radius vector of the earth: }
-  R := 1.00014 - 0.01672 * Cos(M) - 0.00014 * Cos(2 * M);
+  R := 1.00014 - 0.01671 * Cos(M) - 0.00014 * Cos(2 * M);
   { Radius vector of Jupiter: }
-  r_vec := 5.20867 - 0.25192 * Cos(N) - 0.00610 * Cos(2 * N);
+  r_vec := 5.20872 - 0.25208 * Cos(N) - 0.00611 * Cos(2 * N);
   
   { Earth-Jupiter distance: }
   delta := Sqrt(r_vec * r_vec + R * R - 2 * r_vec * R * Cos(K));
@@ -197,40 +267,51 @@ begin
   psi := ArcSin(R / delta * Sin(K));
   
   { Longitude of system 1: }
-  lambda1 := angle((268.28 + 877.8169088 * (d - delta / 173)) * Pi / 180 + psi - B);
+  {lambda1 := angle((268.28 + 877.8169088 * (d - delta / 173)) * p + psi - B);}
   { Longitude of system 2: }
-  lambda2 := angle((290.28 + 870.1869088 * (d - delta / 173)) * Pi / 180 + psi - B);
+  {lambda2 := angle((290.28 + 870.1869088 * (d - delta / 173)) * p + psi - B);}
 
   { calculate the angles of each of the satellites: }
-  moonAngles[0] := angle((84.5506 + 203.4058630 * (d - delta / 173)) * Pi / 180 + psi - B);
-  moonAngles[1] := angle((41.5015 + 101.2916323 * (d - delta / 173)) * Pi / 180 + psi - B);
-  moonAngles[2] := angle((109.9770 + 50.2345169 * (d - delta / 173)) * Pi / 180 + psi - B);
-  moonAngles[3] := oangle((176.3586 + 21.4879802 * (d - delta / 173)) * Pi / 180 + psi - B);
+  moonAngles[0] := angle((163.8069 + 203.4058646 * (d - delta / 173)) * p + psi - B);
+  moonAngles[1] := angle((358.414 + 101.2916335 * (d - delta / 173)) * p + psi - B);
+  moonAngles[2] := angle((5.7176 + 50.234518 * (d - delta / 173)) * p + psi - B);
+  moonAngles[3] := angle((224.8092 + 21.48798 * (d - delta / 173)) * p + psi - B);
+  {u1 := 163.8069*p + 203.4058646*p*dd + ψ - B
+	u2 := 358.414*p + 101.2916335*p*dd + ψ - B
+	u3 := 5.7176*p + 50.234518*p*dd + ψ - B
+	u4 := 224.8092*p + 21.48798*p*dd + ψ - B
+	}
   
   { and the planetocentric angular distance of the earth
     from the equator of Jupiter: }
-  lambda := angle((238.05 + 0.083091 * d + 0.33 * Sin(V)) * Pi / 180 + B);
+  lambda := angle((34.35 + 0.083091 * d + 0.329 * Sin(V)) * p + B);
+  {λ := 34.35*p + .083091*p*d + .329*p*sV + B}
 
-  De := ((3.07 * Sin(lambda + 44.5 * Pi / 180)
-         - 2.15 * Sin(psi) * Cos(lambda - 24.0 * Pi / 180)
-         - 1.31 * (r_vec - delta) / delta
-         * Sin(lambda - 99.4 * Pi / 180))
-        * Pi / 180);
+  De := ((3.12 * Sin(lambda + 42.8 * p)
+         - 2.22 * Sin(psi) * Cos(lambda + 22.0 * p)
+         - 1.3 * (r_vec - delta) / delta
+         * Sin(lambda - 100.5 * p))
+        * p);
+		{DS := 3.12 * p * math.Sin(λ+42.8*p
+		DE := DS - 2.22*p*math.Sin(ψ)*math.Cos(λ+22*p) -
+		1.3*p*(r-Δ)/Δ*math.Sin(λ-100.5*p)}
   
-  G := angle((187.3 + 50.310674 * (d - delta / 173)) * Pi / 180);
-  H := angle((311.1 + 21.569229 * (d - delta / 173)) * Pi / 180);
+  G := angle(( 331.18+ 50.310482 * (d - delta / 173)) * p);
+  H := angle((87.45 + 21.569231 * (d - delta / 173)) * p);
+  {G := 331.18*p + 50.310482*p*dd
+   H := 87.45*p + 21.569231*p*dd}
 
   { Calculate the distances before any corrections are applied: }
-  moonDist[0] := 5.9061 - 0.0244 * Cos(2 * (moonAngles[0] - moonAngles[1]));
-  moonDist[1] := 9.3972 - 0.0889 * Cos(2 * (moonAngles[1] - moonAngles[2]));
-  moonDist[2] := 14.9894 - 0.0227 * Cos(G);
-  moonDist[3] := 26.3649 - 0.1944 * Cos(H);
-  
+  moonDist[0] := 5.9057 - 0.0244 * Cos(2 * (moonAngles[0] - moonAngles[1])); {r1 := 5.9057 - .0244*c212}
+  moonDist[1] := 9.3966 - 0.0882 * Cos(2 * (moonAngles[1] - moonAngles[2])); {r2 := 9.3966 - .0882*c223}
+  moonDist[2] := 14.9883 - 0.0216 * Cos(G); {r3 := 14.9883 - .0216*cG}
+  moonDist[3] := 26.3627 - 0.1939 * Cos(H); {r4 := 26.3627 - .1939*cH}
+      
   { apply some first-order correction terms to the angles: }
-  moonAngles[0] := angle(moonAngles[0] + Sin(2 * (moonAngles[0] - moonAngles[1])) * 0.472 * Pi / 180);
-  moonAngles[1] := angle(moonAngles[1] + Sin(2 * (moonAngles[1] - moonAngles[2])) * 1.073 * Pi / 180);
-  moonAngles[2] := angle(moonAngles[2] + Sin(G) * 0.174 * Pi / 180);
-  moonAngles[3] := angle(moonAngles[3] + Sin(H) * 0.845 * Pi / 180);
+  moonAngles[0] := angle(moonAngles[0] + Sin(2 * (moonAngles[0] - moonAngles[1])) * 0.473 * p); {c1 := .473 * p * s212}
+  moonAngles[1] := angle(moonAngles[1] + Sin(2 * (moonAngles[1] - moonAngles[2])) * 1.065 * p); {c2 := 1.065 * p * s223}
+  moonAngles[2] := angle(moonAngles[2] + Sin(G) * 0.165 * p); {c3 := .165 * p * sG}
+  moonAngles[3] := angle(moonAngles[3] + Sin(H) * 0.843 * p);{c4 := .843 * p * sH}
 end;
 
 function TJupiter.daysBetween(d1, d2: TDateTime): Double;
@@ -353,6 +434,18 @@ begin
   moondata.clear;
 end;
 
+//CM( System I) =   156.84 + 877.8169147 * jd + correction
+//CM( System II) =  181.62 + 870.1869147 * jd + correction
+//CM( System III) = 138.41 + 870.4535567 * jd + correction *
+//where 'jd' is the Julian Day, and the 'correction' is computed as follows:
+
+//jup_mean = (jd - 2455636.938) * 360. / 4332.89709
+//eqn_center = 5.55 * sin( jup_mean)
+//angle = (jd - 2451870.628) * 360. / 398.884 - eqn_center
+//correction = 11 * sin( angle)
+//            + 5 * cos( angle)
+//         - 1.25 * cos( jup_mean) - eqn_center
+
 {
   The Great Red Spot, currently at longitude 61 in system II
 }
@@ -361,7 +454,7 @@ var
   spotlong: Double;
   coord: TXYCoord;
 begin
-  spotlong := angle(lambda2 - spot_in_deg * Pi / 180.0);
+  spotlong := angle(lambda2 - spot_in_deg * p);
   
   { See if the spot is visible: }
   if (spotlong > Pi * 0.5) and (spotlong < Pi * 1.5) then
@@ -388,7 +481,7 @@ var
   longInRad: Double;
 begin
   if (systm = 1) then lambda := lambda1 else lambda := lambda2;
-  longInRad := angle(lambda - long_in_deg * Pi / 180.0);
+  longInRad := angle(lambda - long_in_deg * p.0);
 
   { See if the point is visible: }
   if (longInRad > Pi * 0.5) and (longInRad < Pi * 1.5) then
@@ -442,7 +535,7 @@ end;
 function upcomingEvents(jup: TJupiter; date: TDateTime; tothrs: Double): string;
 var
   saveDate: TDateTime;
-  interval: Integer;
+  interval: real;
   upcoming: string;
   moonnames: array[0..3] of string;
   d: TDateTime;
@@ -460,7 +553,7 @@ begin
   rewrite(fichier);
   saveDate := jup.getDate;
   
-  interval := 1; { minutes }
+  interval := 0.15; {15 secondes }
   upcoming := 'Ephémérides des lunes de Jupiter pour les prochain(e)s : '
               + prettytime(tothrs) + ':' + #13#10#13#10;
 
@@ -542,7 +635,7 @@ begin
     end; { end loop over whichmoon }
 
     if (thisevent <> '') and (nshadows + ntransits > 1) then
-      upcoming :=   pluralize(ntransits, 'transit')
+      upcoming := upcoming +  pluralize(ntransits, 'transit')
                   + ', ' + pluralize(nshadows, 'ombre')  + #13#10;
     upcoming := upcoming + thisevent;
 

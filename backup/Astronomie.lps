@@ -9,9 +9,9 @@
         <Filename Value="Astronomie.lpr"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="3"/>
-        <CursorPos Y="30"/>
-        <UsageCount Value="65"/>
+        <TopLine Value="2"/>
+        <CursorPos X="35" Y="10"/>
+        <UsageCount Value="76"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit0>
       <Unit1>
@@ -20,9 +20,9 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <TopLine Value="143"/>
-        <CursorPos Y="151"/>
-        <UsageCount Value="65"/>
+        <TopLine Value="144"/>
+        <CursorPos X="107" Y="149"/>
+        <UsageCount Value="76"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -35,7 +35,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="64"/>
         <CursorPos X="32" Y="83"/>
-        <UsageCount Value="65"/>
+        <UsageCount Value="76"/>
       </Unit2>
       <Unit3>
         <Filename Value="Unit3.pas"/>
@@ -46,7 +46,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="198"/>
         <CursorPos X="17" Y="217"/>
-        <UsageCount Value="65"/>
+        <UsageCount Value="76"/>
       </Unit3>
       <Unit4>
         <Filename Value="Unit4.pas"/>
@@ -57,15 +57,15 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="356"/>
         <CursorPos Y="379"/>
-        <UsageCount Value="65"/>
+        <UsageCount Value="76"/>
       </Unit4>
       <Unit5>
         <Filename Value="AST_GEN.PAS"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <CursorPos X="24" Y="5"/>
-        <UsageCount Value="65"/>
-        <DefaultSyntaxHighlighter Value="Delphi"/>
+        <TopLine Value="200"/>
+        <CursorPos X="16" Y="227"/>
+        <UsageCount Value="76"/>
       </Unit5>
       <Unit6>
         <Filename Value="AST_FIC.PAS"/>
@@ -73,14 +73,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="14"/>
         <CursorPos X="7" Y="18"/>
-        <UsageCount Value="65"/>
+        <UsageCount Value="76"/>
       </Unit6>
       <Unit7>
         <Filename Value="AST_SUN.PAS"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="33" Y="8"/>
-        <UsageCount Value="65"/>
+        <UsageCount Value="76"/>
       </Unit7>
       <Unit8>
         <Filename Value="AST_MESS.PAS"/>
@@ -88,7 +88,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="417"/>
         <CursorPos X="114" Y="425"/>
-        <UsageCount Value="65"/>
+        <UsageCount Value="76"/>
       </Unit8>
       <Unit9>
         <Filename Value="ast_dive.pas"/>
@@ -97,7 +97,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="24"/>
         <CursorPos X="22" Y="47"/>
-        <UsageCount Value="65"/>
+        <UsageCount Value="76"/>
       </Unit9>
       <Unit10>
         <Filename Value="ast_moon.pas"/>
@@ -106,7 +106,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="253"/>
         <CursorPos Y="276"/>
-        <UsageCount Value="65"/>
+        <UsageCount Value="76"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit10>
       <Unit11>
@@ -116,7 +116,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="2"/>
         <CursorPos X="66" Y="14"/>
-        <UsageCount Value="65"/>
+        <UsageCount Value="76"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit11>
       <Unit12>
@@ -125,7 +125,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="18"/>
         <CursorPos X="27" Y="30"/>
-        <UsageCount Value="65"/>
+        <UsageCount Value="76"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit12>
       <Unit13>
@@ -134,7 +134,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="13"/>
         <CursorPos X="27" Y="18"/>
-        <UsageCount Value="65"/>
+        <UsageCount Value="76"/>
       </Unit13>
       <Unit14>
         <Filename Value="Unit1.lfm"/>
@@ -144,14 +144,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="141"/>
         <CursorPos X="49" Y="163"/>
-        <UsageCount Value="22"/>
+        <UsageCount Value="21"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit14>
       <Unit15>
         <Filename Value="Unit2.lfm"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="86"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit15>
       <Unit16>
@@ -159,7 +159,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="119"/>
         <CursorPos X="76" Y="140"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit16>
       <Unit17>
@@ -170,7 +170,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="321"/>
         <CursorPos X="23" Y="337"/>
-        <UsageCount Value="17"/>
+        <UsageCount Value="16"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit17>
       <Unit18>
@@ -178,19 +178,19 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="2724"/>
         <CursorPos Y="2736"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
       </Unit18>
       <Unit19>
         <Filename Value="..\lcl\include\buttoncontrol.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="42"/>
         <CursorPos Y="55"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
       </Unit19>
       <Unit20>
         <Filename Value="Unit1.lrs"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit20>
       <Unit21>
@@ -199,27 +199,27 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="85"/>
         <CursorPos X="5" Y="108"/>
-        <UsageCount Value="17"/>
+        <UsageCount Value="16"/>
       </Unit21>
       <Unit22>
         <Filename Value="CODAGE.PAS"/>
         <UnitName Value="Codage"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit22>
       <Unit23>
         <Filename Value="AST_CODA.PAS"/>
         <UnitName Value="Ast_Codage"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="13"/>
+        <UsageCount Value="12"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit23>
       <Unit24>
         <Filename Value="AST_GRAP.PAS"/>
         <UnitName Value="Ast_Graph"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit24>
       <Unit25>
         <Filename Value="..\lcl\dialogs.pp"/>
@@ -227,12 +227,12 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="754"/>
         <CursorPos X="10" Y="729"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit25>
       <Unit26>
         <Filename Value="Unit3.lfm"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit26>
       <Unit27>
@@ -240,159 +240,160 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="1222"/>
         <CursorPos X="11" Y="1243"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit27>
       <Unit28>
         <Filename Value="C:\Logiciels\astronom\astronom-master\Convertions Java\jupiter.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="30" Y="7"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit28>
       <Unit29>
         <Filename Value="Ast_JupiterMoons.pas"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="523"/>
-        <CursorPos X="29" Y="545"/>
-        <UsageCount Value="12"/>
+        <TopLine Value="218"/>
+        <CursorPos X="40" Y="245"/>
+        <UsageCount Value="17"/>
         <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit29>
       <Unit30>
         <Filename Value="C:\Logiciels\Lazarus\fpc\3.2.2\source\rtl\inc\mathh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="91"/>
         <CursorPos X="14" Y="105"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit30>
       <Unit31>
         <Filename Value="C:\Logiciels\Lazarus\fpc\3.2.2\source\rtl\objpas\classes\classesh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="426"/>
         <CursorPos X="15" Y="439"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit31>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="353" Column="18" TopLine="328"/>
+        <Caret Line="122" Column="14" TopLine="98"/>
       </Position1>
       <Position2>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="34" Column="20" TopLine="20"/>
+        <Caret Line="114" TopLine="112"/>
       </Position2>
       <Position3>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="102" Column="26" TopLine="79"/>
+        <Caret Line="60" Column="13" TopLine="47"/>
       </Position3>
       <Position4>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="279" Column="17" TopLine="256"/>
+        <Caret Line="61" Column="13" TopLine="47"/>
       </Position4>
       <Position5>
-        <Filename Value="Unit1.pas"/>
-        <Caret Line="156" Column="5" TopLine="143"/>
+        <Filename Value="Ast_JupiterMoons.pas"/>
+        <Caret Line="157" Column="40" TopLine="133"/>
       </Position5>
       <Position6>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="459" Column="37" TopLine="446"/>
+        <Caret Line="288" Column="32" TopLine="270"/>
       </Position6>
       <Position7>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="550" Column="56" TopLine="533"/>
+        <Caret Line="289" Column="9" TopLine="270"/>
       </Position7>
       <Position8>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="551" Column="3" TopLine="534"/>
+        <Caret Line="177" Column="19" TopLine="169"/>
       </Position8>
       <Position9>
-        <Filename Value="Unit1.pas"/>
-        <Caret Line="147" Column="79" TopLine="143"/>
+        <Filename Value="Ast_JupiterMoons.pas"/>
+        <Caret Line="109" Column="13" TopLine="94"/>
       </Position9>
       <Position10>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="537" Column="15" TopLine="534"/>
+        <Caret Line="294" Column="48" TopLine="269"/>
       </Position10>
       <Position11>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="464" Column="3" TopLine="451"/>
+        <Caret Line="40" Column="20" TopLine="26"/>
       </Position11>
       <Position12>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="83" Column="18" TopLine="69"/>
+        <Caret Column="14"/>
       </Position12>
       <Position13>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="440" Column="28" TopLine="417"/>
+        <Caret Line="4" Column="48"/>
       </Position13>
       <Position14>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="442" Column="18" TopLine="419"/>
+        <Caret Line="11" Column="65"/>
       </Position14>
       <Position15>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="446" Column="11" TopLine="423"/>
+        <Caret Line="37" Column="8" TopLine="13"/>
       </Position15>
       <Position16>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="464" Column="11" TopLine="441"/>
+        <Caret Line="40" Column="22" TopLine="16"/>
       </Position16>
       <Position17>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="484" Column="27" TopLine="462"/>
+        <Caret Line="54" Column="34" TopLine="30"/>
       </Position17>
       <Position18>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="497" Column="29" TopLine="475"/>
+        <Caret Line="83" Column="35" TopLine="59"/>
       </Position18>
       <Position19>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="545" Column="15" TopLine="523"/>
+        <Caret Line="113" Column="8" TopLine="89"/>
       </Position19>
       <Position20>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="547" Column="25" TopLine="525"/>
+        <Caret Line="115" Column="18" TopLine="91"/>
       </Position20>
       <Position21>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="551" Column="27" TopLine="529"/>
+        <Caret Line="127" Column="15" TopLine="103"/>
       </Position21>
       <Position22>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="83" Column="18" TopLine="69"/>
+        <Caret Line="133" Column="64" TopLine="109"/>
       </Position22>
       <Position23>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="440" Column="28" TopLine="417"/>
+        <Caret Line="135" Column="15" TopLine="111"/>
       </Position23>
       <Position24>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="442" Column="18" TopLine="419"/>
+        <Caret Line="140" Column="20" TopLine="116"/>
       </Position24>
       <Position25>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="446" Column="11" TopLine="423"/>
+        <Caret Line="40" Column="15" TopLine="24"/>
       </Position25>
       <Position26>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="464" Column="11" TopLine="441"/>
+        <Caret Line="189" Column="9" TopLine="175"/>
       </Position26>
       <Position27>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="483" Column="49" TopLine="462"/>
+        <Caret Line="40" Column="15" TopLine="25"/>
       </Position27>
       <Position28>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="484" Column="27" TopLine="462"/>
+        <Caret Line="189" Column="9" TopLine="175"/>
       </Position28>
       <Position29>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="497" Column="29" TopLine="475"/>
+        <Caret Line="48" Column="75" TopLine="42"/>
       </Position29>
       <Position30>
         <Filename Value="Ast_JupiterMoons.pas"/>
-        <Caret Line="545" Column="29" TopLine="523"/>
+        <Caret Line="457" Column="46" TopLine="444"/>
       </Position30>
     </JumpHistory>
     <RunParams>

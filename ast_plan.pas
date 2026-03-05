@@ -223,7 +223,7 @@ begin
 end;
 
 (**********************************************)
-(*         fin proc‚dure initialise           *)
+(*         fin procédure initialise           *)
 (**********************************************)
 (*chƒpitre 20*)
 procedure orbites(instant : real;n:byte;
