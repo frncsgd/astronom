@@ -8,7 +8,7 @@ uses
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   Buttons, StdCtrls, Menus, ExtCtrls,
   Unit2,Unit3,Unit4,AST_MESS,AST_FIC, AST_SUN,Ast_Moon,Ast_Plan,AST_DEEP,Ast_star,
-  AST_jupitermoons;
+  Ast_JupiterMoons;
 
 type
 
@@ -141,11 +141,9 @@ procedure TForm1.MenuItem3Click(Sender: TObject);
 //Fait le 19/2/2026
 var
   //fichier:text;
-  jup : tjupiter;
-  upcomingStr : string;
+   upcomingStr : string;
  begin
-    jup.create;
-    upcomingStr := upcomingEvents( jup, now,24);
+    upcomingStr := EvenementsAVenir(now,31*24);
     MessageDlg('Fin de génération, cliquer sur OK pour voir le résultat',mtInformation, [mbOK], 0);
     OpenDocument('galileens.txt'); { *Converti depuis ShellExecute* }
 end;

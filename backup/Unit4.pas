@@ -111,9 +111,8 @@ begin
 procedure TForm4.Button2Click(Sender: TObject);
 begin
   {*Bouton valider*}
- label12.caption:='';
- label1.visible:=true;
- Button1.visible:=true;
+   label11.caption:=label12.caption;
+   label12.caption:='';
 
 end;
 

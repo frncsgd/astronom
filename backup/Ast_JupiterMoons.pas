@@ -1,5 +1,7 @@
 Unit Ast_JupiterMoons;
 
+{$MODE Delphi}
+
 {
   Delphi code to calculate the position of Jupiter's moons and shadows.
   Original Javascript Copyright 2009, 2013 by Akkana Peck --
@@ -13,7 +15,8 @@ Unit Ast_JupiterMoons;
 
 interface
 
-uses SysUtils, Math, DateUtils;
+uses AST_GEN,AST_PLAN,AST_SUN,SysUtils, Math, DateUtils,Ast_Fic;
+//,Ast_Gen,Ast_Plan,Dialogs;
 
 type
   { object that has .x and .y }
@@ -237,6 +240,11 @@ var
 
    d:=d+(deltat/(3600*24));
 
+{V := 172.74*p + .00111588*p*d
+	M := 357.529*p + .9856003*p*d
+	sV := math.Sin(V)
+	N := 20.02*p + .0830853*p*d + .329*p*sV
+	J := 66.115*p + .9025179*p*d - .329*p*sV}
 
   { Argument for the long-period term in the motion of Jupiter: }
   V := angle((172.74* + 0.00111588 * d) * p);
@@ -481,7 +489,7 @@ var
   longInRad: Double;
 begin
   if (systm = 1) then lambda := lambda1 else lambda := lambda2;
-  longInRad := angle(lambda - long_in_deg * p.0);
+  longInRad := angle(lambda - long_in_deg * p);
 
   { See if the point is visible: }
   if (longInRad > Pi * 0.5) and (longInRad < Pi * 1.5) then
@@ -535,7 +543,6 @@ end;
 function upcomingEvents(jup: TJupiter; date: TDateTime; tothrs: Double): string;
 var
   saveDate: TDateTime;
-  interval: real;
   upcoming: string;
   moonnames: array[0..3] of string;
   d: TDateTime;
@@ -547,14 +554,31 @@ var
   thisevent: string;
   hasLastData: array[0..3] of Boolean;
   fichier : text;
+  vr1 : real;
+  vr2 : real;
+  vr3 : real;
+  vr4 : real;
+  vr5 : real;
+  vr6 : real;
+  vr7 : real;
+  delta : real;
+  alpha : str8;
+  deltaS : real;
+  alphaS : str8;
+  IsVisible : boolean;
+  jj : real;
+  vdate : str10;
+  vheure : str8;
+ const
+  DateFormatChars = 'dd/mm/yyyy';
+  TimeFormatChars = 'hh:nn:ss';
 begin
 
   assignfile(fichier,'galileens.txt');
   rewrite(fichier);
   saveDate := jup.getDate;
-  
-  interval := 0.15; {15 secondes }
-  upcoming := 'Ephémérides des lunes de Jupiter pour les prochain(e)s : '
+  upcoming:='Le '+FormatDateTime('dd/mm/yyyy hh:nn', jup.getDate) + #13#10#13#10;
+  upcoming := upcoming+'Ephémérides des lunes de Jupiter pour les prochain(e)s : '
               + prettytime(tothrs) + ':' + #13#10#13#10;
 
   moonnames[0] := 'Io';
@@ -574,7 +598,7 @@ begin
     jup.setDate(d);
     
     if (verbose) then
-      upcoming := upcoming + #13#10 + DateTimeToStr(d) + #13#10;
+      upcoming := upcoming + #13#10 + FormatDateTime('dd/mm hh:nn', d) + #13#10;
 
     { Keep track of how many moons are involved in events }
     nshadows := 0;
@@ -600,32 +624,32 @@ begin
           Inc(ntransits);
 
         if IsNaN(moondata.moonx) and not IsNaN(lastmoondata[whichmoon].moonx) then
-          thisevent := thisevent + DateTimeToStr(d) + ': '
+          thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': '
                        + moonnames[whichmoon] + ' disparaît' + #13#10
         else if not IsNaN(moondata.moonx) and IsNaN(lastmoondata[whichmoon].moonx) then
         begin
           if not moondata.eclipse then
-            thisevent := thisevent + DateTimeToStr(d) + ': '
+            thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': '
                          + moonnames[whichmoon] + ' réapparaît' + #13#10;
         end
         else if moondata.transit and not lastmoondata[whichmoon].transit then
-          thisevent := thisevent + DateTimeToStr(d) + ': ' + moonnames[whichmoon]
+          thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon]
                        + ' : début du transit' + #13#10
         else if not moondata.transit and lastmoondata[whichmoon].transit then
-          thisevent := thisevent + DateTimeToStr(d) + ': ' + moonnames[whichmoon]
+          thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon]
                        + ' : fin du transit' + #13#10
         else if moondata.eclipse and not lastmoondata[whichmoon].eclipse then
-          thisevent := thisevent + DateTimeToStr(d) + ': ' + moonnames[whichmoon]
+          thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon]
                        + ' : début éclipse' + #13#10
         else if not moondata.eclipse and lastmoondata[whichmoon].eclipse then
-          thisevent := thisevent + DateTimeToStr(d) + ': ' + moonnames[whichmoon]
+          thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon]
                        + ' : quitte l''éclipse' + #13#10;
 
         if IsNaN(moondata.shadowx) and not IsNaN(lastmoondata[whichmoon].shadowx) then
-          thisevent := thisevent + DateTimeToStr(d) + ': ' + moonnames[whichmoon]
+          thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon]
                        + ' : l''ombre disparaît' + #13#10
         else if not IsNaN(moondata.shadowx) and IsNaN(lastmoondata[whichmoon].shadowx) then
-          thisevent := thisevent + DateTimeToStr(d) + ': ' + moonnames[whichmoon]
+          thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon]
                        + ' : l''ombre apparaît' + #13#10;
       end;
 
@@ -634,9 +658,26 @@ begin
       hasLastData[whichmoon] := True;
     end; { end loop over whichmoon }
 
+    if thisevent<>'' then
+     begin
+      {Test si Jupiter est visible hauteur>0 et Soleil<0}
+      {Récupérer Alpha et Delta Jupiter}
+        vdate:= FormatDateTime( DateFormatChars, d);
+        vheure:= FormatDateTime( TimeFormatChars, d);
+        jj:=julien(vdate,vheure);
+	orbites(jj,4,vr1,vr2,vr3,vr4,delta,vr5,alpha); {dans Ast_Plan}
+        calc_soleil(jj,alphaS,deltaS,vr1,vr2,vr3,vr4,vr5,vr6,vr7);
+	IsVisible:=visible(jj,alpha,delta,alphaS,deltaS) ; {dans Ast_gen}
+       end;
+
+    if not isvisible then thisevent:='';
+
+
     if (thisevent <> '') and (nshadows + ntransits > 1) then
-      upcoming := upcoming +  pluralize(ntransits, 'transit')
-                  + ', ' + pluralize(nshadows, 'ombre')  + #13#10;
+
+    upcoming := upcoming +  pluralize(ntransits, 'transit')
+                 + ', ' + pluralize(nshadows, 'ombre')  + #13#10;
+
     upcoming := upcoming + thisevent;
 
 

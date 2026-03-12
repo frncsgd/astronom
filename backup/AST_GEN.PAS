@@ -3,7 +3,7 @@ Unit AST_GEN;
 {$MODE Delphi}
 
 interface
-uses LCLIntf, LCLType, LMessages, SysUtils,AST_FIC;
+uses LCLIntf, LCLType, SysUtils,AST_FIC,Dialogs;
 
 const
  unite_astronomique=149597870;
@@ -36,6 +36,8 @@ procedure meridien(alpha:str8;greenwich,vlongitude:real;var instant :str8);
 procedure invjulien(jjulien:real;var date:str10;var heure:str8);
 procedure conversion_angle(angle:real;var degres,minute : word;var secondes:real);
 function dateSysteme: string;
+function visible(jj : real;alpha : str8;delta : real;alphaS : str8;deltaS : real) : boolean;
+
 
 implementation
 
@@ -564,5 +566,29 @@ var
 begin
       datesysteme:=copy(DateTimeToStr(Now),1,10);
 end;
+
+function visible(jj : real;alpha : str8;delta : real;alphaS : str8;deltaS : real) : boolean;
+var 
+ jjulien0 : real;
+ date : str10;
+ heure : str8;
+ z : real;
+ interm : boolean;
+ hauteur:real;
+ hauteurS:real;
+begin
+ {Test si l'objet est visible hauteur>0 ET hauteur soleil<0}
+    invjulien(jj,date,heure);  {Pour récupérer heure}
+    jjulien0:=julien(date,'00:00:00');
+
+    Equatorial_to_Horizontal(jjulien0,heure,0,alpha,global_latitude,global_longitude,delta,hauteur,z);
+    equatorial_to_Horizontal(jjulien0,heure,0,alphaS,global_latitude,global_longitude,deltaS,hauteurS,z);
+
+    if hauteur>0 and hauteurS<0 then interm:=true else interm:=false;
+
+    Visible:=interm;
+
+end;
+
 
 end.

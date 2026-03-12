@@ -8,7 +8,7 @@ uses
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   Buttons, StdCtrls, Menus, ExtCtrls,
   Unit2,Unit3,Unit4,AST_MESS,AST_FIC, AST_SUN,Ast_Moon,Ast_Plan,AST_DEEP,Ast_star,
-  AST_jupitermoons;
+  Ast_JupiterMoons;
 
 type
 

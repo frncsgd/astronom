@@ -1,7 +1,7 @@
 @echo off
-SET THEFILE=C:\lazarus\astronom\Astronomie.exe
+SET THEFILE=C:\Users\Utilisateur\Documents\GitHub\astronom\Astronomie.exe
 echo Linking %THEFILE%
-C:\lazarus\fpc\3.0.4\bin\x86_64-win64\ld.exe -b pei-x86-64  --gc-sections   --subsystem windows --entry=_WinMainCRTStartup    -o C:\lazarus\astronom\Astronomie.exe C:\lazarus\astronom\link.res
+C:\Logiciels\Lazarus\fpc\3.2.2\bin\x86_64-win64\ld.exe -b pei-x86-64  --gc-sections  -s --subsystem windows --entry=_WinMainCRTStartup    -o C:\Users\Utilisateur\Documents\GitHub\astronom\Astronomie.exe C:\Users\Utilisateur\Documents\GitHub\astronom\link15796.res
 if errorlevel 1 goto linkend
 goto end
 :asmend

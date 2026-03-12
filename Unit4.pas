@@ -294,7 +294,7 @@ label2.visible:=true;
    chaine:='TSG = '+vheure2;
    label5.caption:=chaine;
 
-   tsl(jjulien0,vheure,4.8,tslocal);
+   tsl(jjulien0,vheure,global_longitude,tslocal);
    heuredecmin(tslocal,vheure2);
 
 
