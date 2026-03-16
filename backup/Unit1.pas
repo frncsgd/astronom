@@ -138,15 +138,15 @@ begin
 end;
 
 procedure TForm1.MenuItem3Click(Sender: TObject);
-//Fait le 19/2/2026
+//Ajouté le 19/2/2026
 var
-  //fichier:text;
-   upcomingStr : string;
+  jup : tjupiter;
  begin
-    upcomingStr := EvenementsAVenir(now,31*24);
-    MessageDlg('Fin de génération, cliquer sur OK pour voir le résultat',mtInformation, [mbOK], 0);
+    jup := TJupiter.Create;
+    upcomingEvents( jup, now,31*24);
     OpenDocument('galileens.txt'); { *Converti depuis ShellExecute* }
-end;
+    jup.free;
+    end;
 
 procedure TForm1.tataClick(Sender: TObject);
 begin

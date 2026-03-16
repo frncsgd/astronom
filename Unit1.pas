@@ -138,16 +138,19 @@ begin
 end;
 
 procedure TForm1.MenuItem3Click(Sender: TObject);
-//Fait le 19/2/2026
 var
-  //fichier:text;
-  jup : tjupiter;
-  upcomingStr : string;
- begin
-    jup.create;
-    upcomingStr := upcomingEvents( jup, now,31*24);
-    MessageDlg('Fin de génération, cliquer sur OK pour voir le résultat',mtInformation, [mbOK], 0);
-    OpenDocument('galileens.txt'); { *Converti depuis ShellExecute* }
+  jup : TJupiter;
+begin
+  // Utilisation de la syntaxe correcte : Instance := Classe.Create;
+  jup := TJupiter.Create;
+  try
+    upcomingEvents(jup, Now, 31 * 24);
+    OpenDocument('galileens.txt');
+  finally
+    // Utiliser try...finally garantit que jup.Free est appelé
+    // même si upcomingEvents rencontre une erreur.
+    jup.Free;
+  end;
 end;
 
 procedure TForm1.tataClick(Sender: TObject);

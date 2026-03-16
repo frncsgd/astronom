@@ -1,4 +1,4 @@
-Unit Ast_JupiterMoons;
+Unit Ast_JupiterMoons2;
 
 {$MODE Delphi}
 
@@ -17,78 +17,47 @@ interface
 
 uses AST_GEN,AST_PLAN,AST_SUN,SysUtils, Math, DateUtils,Ast_Fic;
 
+function EvenementsAVenir(date: TDateTime; tothrs: Double): string;
+
+implementation
+
 type
   { object that has .x and .y }
-  TXYCoord =  record
+  TXYCoord = record
     x: Double;
     y: Double;
   end;
 
-  { Data structure for moon positions and events }
-  TMoonData = record
-    moonx: Double;
-    moony: Double;
-    shadowx: Double;
-    shadowy: Double;
-    transit: Boolean;
-    farside: Boolean;
-    eclipse: Boolean;
-    procedure Clear;
-  end;
-
-  TJupiter = class
-  private
     const NUM_MOONS = 4;
     const p = pi/180;
-    var
-      curdate: TDateTime;        { javascript Date object equivalent }
-      d: Double;                 { days since epoch, 1899 Dec 31 12h ET }
+
+  var
+    moonx : array[0..NUM_MOONS-1]of Double;
+    moony : array[0..NUM_MOONS-1]of Double;
+    shadowx: array[0..NUM_MOONS-1]of Double;
+    shadowy: array[0..NUM_MOONS-1]of Double;
+    transit: array[0..NUM_MOONS-1]of boolean;
+    farside: array[0..NUM_MOONS-1]of Boolean;
+    eclipse: array[0..NUM_MOONS-1]of Boolean;
+    curdate: TDateTime;        { javascript Date object equivalent }
+    d: Double;                 { days since epoch, 1899 Dec 31 12h ET }
       
       { Angles of each of the Galilean satellites, in radians,
         expressed relative to each satellite's inferior conjunction: }
-      moonAngles: array[0..NUM_MOONS-1] of Double;
+    moonAngles: array[0..NUM_MOONS-1] of Double;
       { And their distances from the planet: }
-      moonDist: array[0..NUM_MOONS-1] of Double;
+    moonDist: array[0..NUM_MOONS-1] of Double;
 
       { variables we may want later for moon calcs: }
-      psi: Double;
-      
-      delta: Double; { Earth-Jupiter distance }
-      De: Double;    { planetocentric ang. dist. of earth from jup. equator }
-      G: Double;
-      H: Double;
-
-      { latitudes of systems I and II: }
-      lambda1: Double;
-      lambda2: Double;
-
+    psi: Double;
+    delta: Double; { Earth-Jupiter distance }
+    De: Double;    { planetocentric ang. dist. of earth from  equator }
+    G: Double;
+    H: Double;
+   { latitudes of systems I and II: }
+    lambda1: Double;
+    lambda2: Double;
     { Internal helpers }
-    function angle(a: Double): Double;
-    function oangle(a: Double): Double;
-    function getJulianDate(d: TDateTime): Double;
-    function daysBetween(d1, d2: TDateTime): Double;
-
-  public
-    constructor Create;
-    function getDate: TDateTime;
-    procedure setDate(initDate: TDateTime);
-    function getMoonXYData(whichmoon: Integer): TMoonData;
-    function getRedSpotXY(spot_in_deg: Double): TXYCoord;
-    function getJovianPointX(long_in_deg: Double; systm: Integer): Double;
-    property CurrentDate: TDateTime read curdate;
-  end;
-
-{ Global helper functions }
-function dist(x, y: Double): Double;
-function prettytime(tothrs: Double): string;
-Procedure upcomingEvents(jup: TJupiter; date: TDateTime; tothrs: Double);
-function endsWith(const str, suffix: string): Boolean;
-function pluralize(num: Integer; const word: string): string;
-
-{ Utility functions for cloning (mimicking JS logic) }
-function clone(const source: TMoonData): TMoonData;
-
-implementation
 
 { TXYCoord }
 
@@ -100,24 +69,29 @@ implementation
 
 { TMoonData }
 
-procedure TMoonData.Clear;
+procedure Clear;
+var
+   n : integer;
 begin
-  moonx := 0.0;
-  moony := 0.0;
-  shadowx := 0.0;
-  shadowy := 0.0;
-  transit := False;
-  farside := False;
-  eclipse := False;
+ for n:=0 to 3 do
+   begin
+  moonx[n] := 0.0;
+  moony[n] := 0.0;
+  shadowx[n] := 0.0;
+  shadowy[n] := 0.0;
+  transit[n] := False;
+  farside[n] := False;
+  eclipse[n] := False;
+  end;
 end;
 
 { TJupiter }
 
-constructor TJupiter.Create;
+Procedure Create;
 var
   i: Integer;
 begin
-  inherited;
+
   for i := 0 to NUM_MOONS - 1 do
   begin
     moonAngles[i] := NaN;
@@ -125,16 +99,22 @@ begin
   end;
 end;
 
-
-function TJupiter.getDate: TDateTime;
+function getDate: TDateTime;
 begin
   Result := curdate;
 end;
-
+function oangle(a: Double): Double;
+begin
+  while (a > 2 * Pi) do
+    a := a - 2.0 * Pi;
+  while (a < 0) do
+    a := a + 2.0 * Pi;
+  Result := a;
+end;
 {
   Convert an angle (in radians) so that it's between 0 and 2*PI:
 }
-function TJupiter.angle(a: Double): Double;
+function angle(a: Double): Double;
 begin
   if (a < 10000) then
     Exit(oangle(a));
@@ -145,20 +125,20 @@ begin
   Result := a;
 end;
 
-function TJupiter.oangle(a: Double): Double;
+function getJulianDate(d: TDateTime): Double;
+var
+  epoch: TDateTime;
 begin
-  while (a > 2 * Pi) do
-    a := a - 2.0 * Pi;
-  while (a < 0) do
-    a := a + 2.0 * Pi;
-  Result := a;
+  { JS: new Date("Jan 1 0:00 PST 1970") -> 1970-01-01 08:00:00 UTC }
+  { We calculate JD based on this specific reference point }
+  epoch := EncodeDateTime(1970, 1, 1, 8, 0, 0, 0);
+  Result := (daysBetween(epoch, d) + 2440587.83333333333);
 end;
 
-procedure TJupiter.setDate(initDate: TDateTime);
+procedure setDate(initDate: TDateTime);
 var
   V, M, N, J, A, B, K, R, r_vec, lambda,deltaT: Double;
-  year,month : word;
-  day : word;
+  year : Integer;
   begin
   { Calculate the position of Jupiter's central meridian,
     and the corresponding moonAngle and moonDist arrays;
@@ -177,7 +157,7 @@ var
   calculate delta-T (in seconds) for any year between 0 to 3000
   aussi dans https://github.com/soniakeys/meeus}
   
-  DecodeDate(curdate, year, month,day);         //récupérer l'année courante
+  year:=2026;
    
     if (year < 500) then
 	 begin
@@ -322,182 +302,12 @@ var
   moonAngles[3] := angle(moonAngles[3] + Sin(H) * 0.843 * p);{c4 := .843 * p * sH}
 end;
 
-function TJupiter.daysBetween(d1, d2: TDateTime): Double;
+function daysBetween(d1, d2: TDateTime): Double;
 begin
   { In Delphi, subtracting TDateTime gives days as a Double }
   Result := d2 - d1;
 end;
-
-function TJupiter.getJulianDate(d: TDateTime): Double;
-var
-  epoch: TDateTime;
-begin
-  { JS: new Date("Jan 1 0:00 PST 1970") -> 1970-01-01 08:00:00 UTC }
-  { We calculate JD based on this specific reference point }
-  epoch := EncodeDateTime(1970, 1, 1, 8, 0, 0, 0);
-  Result := (daysBetween(epoch, d) + 2440587.83333333333);
-end;
-
-{
-  Returns the moon position in units of Jupiter radii.
-  Also calculate the shadows, and whether the moon is eclipsed
-  by Jupiter's shadow or transiting in front of Jupiter.
-}
-function TJupiter.getMoonXYData(whichmoon: Integer): TMoonData;
-var
-  r: Double;
-  moondata: TMoonData;
-  diskdist: Double;
-  s: string; { Used for logging/debugging in original JS }
-  xy: TXYCoord;
-  atmoslop: Double;
-
-  function getShadowXY(ang: Double): TXYCoord;
-  var
-    moonSunAngle: Double;
-    res: TXYCoord;
-  begin
-    moonSunAngle := ang - psi;
-    res.x := r * Sin(moonSunAngle);
-    res.y := r * Cos(moonSunAngle) * Sin(De);
-    Result := res;
-  end;
-
-begin
-  r := moonDist[whichmoon];
-  moondata.Clear;
-
-  moondata.moonx := r * Sin(moonAngles[whichmoon]);
-  moondata.moony := r * Cos(moonAngles[whichmoon]) * Sin(De);
-
-  { Is the moon directly in front of or behind Jupiter's disk?
-    Then this distance will be <= 1. }
-  diskdist := dist(moondata.moonx, moondata.moony);
-
-  s := 'moon ' + IntToStr(whichmoon);
-  s := s + #10'Dist = ' + FloatToStr(r);
-  s := s + #10'moonAngle = ' + FloatToStr(moonAngles[whichmoon]);
-  s := s + ' = ' + FloatToStr(moonAngles[whichmoon] * 180.0 / Pi);
-  s := s + #10'Jup phase angle = ' + FloatToStr(psi);
-  s := s + ' = ' + FloatToStr(psi * 180.0 / Pi);
-
-  moondata.shadowx := NaN;
-  moondata.shadowy := NaN;
-
-  { See whether the moon is on the near side of the planet: }
-  if (moonAngles[whichmoon] < Pi * 0.5) or (moonAngles[whichmoon] > Pi * 1.5) then
-  begin
-    { Is it transiting? Leave a little slop, consider a moon
-      transiting when it's just starting its transit. }
-    if (diskdist < 0.9) then
-      moondata.transit := True;
-
-    { Since the moon is on the near side, check for shadows
-      cast by the moon on the planet. }
-    s := s + #10'Near side of the planet';
-    moondata.farside := False;
-
-    xy := getShadowXY(moonAngles[whichmoon]);
-    moondata.shadowx := xy.x;
-    moondata.shadowy := xy.y;
-
-    { Is it hitting the planet? If not, set coords to NaN.
-      Some day, ought to check for moons eclipsing other moons }
-    if (moondata.shadowx < -1.0) or (moondata.shadowx > 1.0) then
-    begin
-      moondata.shadowx := NaN;
-      moondata.shadowy := NaN;
-    end;
-  end
-  { Is the moon blocked by the planet, so it's invisible? }
-  else if (diskdist < 1.0) then
-  begin
-    moondata.farside := True;
-    moondata.moonx := NaN;
-    moondata.moony := NaN;
-    s := s + #10'Blocked by the planet';
-  end
-  { Otherwise, it's on the far side.
-    See if it's eclipsed by the planet's shadow. }
-  else
-  begin
-    moondata.farside := True;
-    s := s + #10'Far side of the planet';
-
-    { See if a moon 180 degrees away from this moon's position,
-      at the same distance, would cast a shadow on the planet.
-      If so, the actual moon is eclipsed. }
-    atmoslop := 0.9;
-    xy := getShadowXY(angle(moonAngles[whichmoon] + Pi));
-    moondata.eclipse := (dist(xy.x, xy.y) < atmoslop);
-    
-    s := s + #10'Actual moon at (' + FloatToStr(moondata.moonx) + ', ' + FloatToStr(moondata.moony) + ')';
-    s := s + #10'Fake shadow at (' + FloatToStr(xy.x) + ', ' + FloatToStr(xy.y) + ')';
-    s := s + #10'Dist from center = ' + FloatToStr(Sqrt(xy.x * xy.x + xy.y * xy.y));
-    if (moondata.eclipse) then
-      s := s + #10'Eclipse of moon ' + IntToStr(whichmoon) + '!';
-  end;
-
-  Result := moondata;
-  end;
-
-//CM( System I) =   156.84 + 877.8169147 * jd + correction
-//CM( System II) =  181.62 + 870.1869147 * jd + correction
-//CM( System III) = 138.41 + 870.4535567 * jd + correction *
-//where 'jd' is the Julian Day, and the 'correction' is computed as follows:
-
-//jup_mean = (jd - 2455636.938) * 360. / 4332.89709
-//eqn_center = 5.55 * sin( jup_mean)
-//angle = (jd - 2451870.628) * 360. / 398.884 - eqn_center
-//correction = 11 * sin( angle)
-//            + 5 * cos( angle)
-//         - 1.25 * cos( jup_mean) - eqn_center
-
-{
-  The Great Red Spot, currently at longitude 61 in system II
-}
-function TJupiter.getRedSpotXY(spot_in_deg: Double): TXYCoord;
-var
-  spotlong: Double;
-  coord: TXYCoord;
-begin
-  spotlong := angle(lambda2 - spot_in_deg * p);
-  
-  { See if the spot is visible: }
-  if (spotlong > Pi * 0.5) and (spotlong < Pi * 1.5) then
-  begin
-    coord.x := NaN;
-    coord.y := NaN;
-  end
-  else
-  begin
-    coord.x := Sin(spotlong);
-    coord.y := 0.42; { completely random wild-assed guess }
-  end;
-  
-  Result := coord;
-end;
-
-{
-  You might also want to get the location of some arbitrary
-  other position on the planet, e.g. the Great Northern Spot.
-}
-function TJupiter.getJovianPointX(long_in_deg: Double; systm: Integer): Double;
-var
-  lambda: Double;
-  longInRad: Double;
-begin
-  if (systm = 1) then lambda := lambda1 else lambda := lambda2;
-  longInRad := angle(lambda - long_in_deg * p);
-
-  { See if the point is visible: }
-  if (longInRad > Pi * 0.5) and (longInRad < Pi * 1.5) then
-    Result := NaN
-  else
-    Result := Sin(longInRad);
-end;
-
-{ Global Functions }
+ { Global Functions }
 
 function dist(x, y: Double): Double;
 begin
@@ -527,6 +337,168 @@ begin
   Result := pt;
 end;
 
+
+{
+  Returns the moon position in units of Jupiter radii.
+  Also calculate the shadows, and whether the moon is eclipsed
+  by Jupiter's shadow or transiting in front of Jupiter.
+}
+function getMoonXYData(whichmoon: Integer);
+var
+  r: Double;
+  moondata: TMoonData;
+  diskdist: Double;
+  s: string; { Used for logging/debugging in original JS }
+  xy: TXYCoord;
+  atmoslop: Double;
+
+  function getShadowXY(ang: Double): TXYCoord;
+  var
+    moonSunAngle: Double;
+    res: TXYCoord;
+  begin
+    moonSunAngle := ang - psi;
+    res.x := r * Sin(moonSunAngle);
+    res.y := r * Cos(moonSunAngle) * Sin(De);
+    Result := res;
+  end;
+
+begin
+  r := moonDist[whichmoon];
+  Clear;
+
+  moonx := r * Sin(moonAngles[whichmoon]);
+  moony := r * Cos(moonAngles[whichmoon]) * Sin(De);
+
+  { Is the moon directly in front of or behind Jupiter's disk?
+    Then this distance will be <= 1. }
+  diskdist := dist(moonx, moony);
+
+  s := 'moon ' + IntToStr(whichmoon);
+  s := s + #10'Dist = ' + FloatToStr(r);
+  s := s + #10'moonAngle = ' + FloatToStr(moonAngles[whichmoon]);
+  s := s + ' = ' + FloatToStr(moonAngles[whichmoon] * 180.0 / Pi);
+  s := s + #10'Jup phase angle = ' + FloatToStr(psi);
+  s := s + ' = ' + FloatToStr(psi * 180.0 / Pi);
+
+  shadowx := NaN;
+  shadowy := NaN;
+
+  { See whether the moon is on the near side of the planet: }
+  if (moonAngles[whichmoon] < Pi * 0.5) or (moonAngles[whichmoon] > Pi * 1.5) then
+  begin
+    { Is it transiting? Leave a little slop, consider a moon
+      transiting when it's just starting its transit. }
+    if (diskdist < 0.9) then
+      transit := True;
+
+    { Since the moon is on the near side, check for shadows
+      cast by the moon on the planet. }
+    s := s + #10'Near side of the planet';
+    farside := False;
+
+    xy := getShadowXY(moonAngles[whichmoon]);
+    shadowx := xy.x;
+    shadowy := xy.y;
+
+    { Is it hitting the planet? If not, set coords to NaN.
+      Some day, ought to check for moons eclipsing other moons }
+    if (shadowx < -1.0) or (shadowx > 1.0) then
+    begin
+      shadowx := NaN;
+      shadowy := NaN;
+    end;
+  end
+  { Is the moon blocked by the planet, so it's invisible? }
+  else if (diskdist < 1.0) then
+  begin
+    farside := True;
+    moonx := NaN;
+    moony := NaN;
+    s := s + #10'Blocked by the planet';
+  end
+  { Otherwise, it's on the far side.
+    See if it's eclipsed by the planet's shadow. }
+  else
+  begin
+    farside := True;
+    s := s + #10'Far side of the planet';
+
+    { See if a moon 180 degrees away from this moon's position,
+      at the same distance, would cast a shadow on the planet.
+      If so, the actual moon is eclipsed. }
+    atmoslop := 0.9;
+    xy := getShadowXY(angle(moonAngles[whichmoon] + Pi));
+    eclipse := (dist(xy.x, xy.y) < atmoslop);
+    
+    s := s + #10'Actual moon at (' + FloatToStr(moonx) + ', ' + FloatToStr(moony) + ')';
+    s := s + #10'Fake shadow at (' + FloatToStr(xy.x) + ', ' + FloatToStr(xy.y) + ')';
+    s := s + #10'Dist from center = ' + FloatToStr(Sqrt(xy.x * xy.x + xy.y * xy.y));
+    if (eclipse) then
+      s := s + #10'Eclipse of moon ' + IntToStr(whichmoon) + '!';
+  end;
+
+  Result := moondata;
+  clear;
+end;
+
+//CM( System I) =   156.84 + 877.8169147 * jd + correction
+//CM( System II) =  181.62 + 870.1869147 * jd + correction
+//CM( System III) = 138.41 + 870.4535567 * jd + correction *
+//where 'jd' is the Julian Day, and the 'correction' is computed as follows:
+
+//jup_mean = (jd - 2455636.938) * 360. / 4332.89709
+//eqn_center = 5.55 * sin( jup_mean)
+//angle = (jd - 2451870.628) * 360. / 398.884 - eqn_center
+//correction = 11 * sin( angle)
+//            + 5 * cos( angle)
+//         - 1.25 * cos( jup_mean) - eqn_center
+
+{
+  The Great Red Spot, currently at longitude 61 in system II
+}
+function getRedSpotXY(spot_in_deg: Double): TXYCoord;
+var
+  spotlong: Double;
+  coord: TXYCoord;
+begin
+  spotlong := angle(lambda2 - spot_in_deg * p);
+  
+  { See if the spot is visible: }
+  if (spotlong > Pi * 0.5) and (spotlong < Pi * 1.5) then
+  begin
+    coord.x := NaN;
+    coord.y := NaN;
+  end
+  else
+  begin
+    coord.x := Sin(spotlong);
+    coord.y := 0.42; { completely random wild-assed guess }
+  end;
+  
+  Result := coord;
+end;
+
+{
+  You might also want to get the location of some arbitrary
+  other position on the planet, e.g. the Great Northern Spot.
+}
+function getJovianPointX(long_in_deg: Double; systm: Integer): Double;
+var
+  lambda: Double;
+  longInRad: Double;
+begin
+  if (systm = 1) then lambda := lambda1 else lambda := lambda2;
+  longInRad := angle(lambda - long_in_deg * p);
+
+  { See if the point is visible: }
+  if (longInRad > Pi * 0.5) and (longInRad < Pi * 1.5) then
+    Result := NaN
+  else
+    Result := Sin(longInRad);
+end;
+
+
 { 
   Deep clone equivalent for Delphi records. 
   In Delphi, record assignment is a copy.
@@ -539,127 +511,153 @@ end;
 {
   Build a table of upcoming moon events for a given interval.
 }
-procedure upcomingEvents(jup: TJupiter; date: TDateTime; tothrs: Double);
+function upcomingEvents(jup: TJupiter; date: TDateTime; tothrs: Double): string;
 var
   saveDate: TDateTime;
+  upcoming: string;
   moonnames: array[0..3] of string;
   d: TDateTime;
   lastmoondata: array[0..3] of TMoonData;
   moondata: TMoonData;
+  verbose: Boolean;
   mins, whichmoon: Integer;
   nshadows, ntransits: Integer;
   thisevent: string;
   hasLastData: array[0..3] of Boolean;
-  fichier : TextFile; // Utilisation du type standard TextFile
-
-  // Variables pour Ast_Plan / Ast_Gen
-  vr1, vr2, vr3, vr4, vr5, vr6, vr7, delta, jj, deltaS: Double;
-  alpha, alphaS: str8;
-  vdate, vheure: string;
-  IsVisible: Boolean;
-
-const
+  fichier : text;
+  vr1 : real;
+  vr2 : real;
+  vr3 : real;
+  vr4 : real;
+  vr5 : real;
+  vr6 : real;
+  vr7 : real;
+  delta : real;
+  alpha : str8;
+  deltaS : real;
+  alphaS : str8;
+  IsVisible : boolean;
+  jj : real;
+  vdate : str10;
+  vheure : str8;
+ const
   DateFormatChars = 'dd/mm/yyyy';
   TimeFormatChars = 'hh:nn:ss';
 begin
-  AssignFile(fichier, 'galileens.txt');
-  Rewrite(fichier);
 
-  saveDate := jup.getDate;
+  assignfile(fichier,'galileens.txt');
+  rewrite(fichier);
+  saveDate := getDate;
+  upcoming:='Le '+FormatDateTime('dd/mm/yyyy hh:nn', Date) + #13#10#13#10;
+  upcoming := upcoming+'Ephémérides des lunes de Jupiter pour les prochain(e)s : '
+              + prettytime(tothrs) + ':' + #13#10#13#10;
 
-  try
-    // Écriture de l'en-tête directement dans le fichier
-    WriteLn(fichier, 'Le ', FormatDateTime('dd/mm/yyyy hh:nn', date),' !!Les heures sont en temps universel!!');
-    WriteLn(fichier, 'Ephémérides des lunes de Jupiter pour les prochain(e)s : ', prettytime(tothrs), ':');
-    WriteLn(fichier, '');
+  moonnames[0] := 'Io';
+  moonnames[1] := 'Europe';
+  moonnames[2] := 'Ganymède';
+  moonnames[3] := 'Callisto';
 
-    moonnames[0] := 'Io';
-    moonnames[1] := 'Europe';
-    moonnames[2] := 'Ganymède';
-    moonnames[3] := 'Callisto';
+  d := date;
+  for whichmoon := 0 to 3 do
+    hasLastData[whichmoon] := False;
 
+  verbose := False;
+
+  for mins := -30 to Trunc(tothrs * 60) - 1 do
+  begin
+    d := IncMinute(date, mins);
+    setDate(d);
+    
+    if (verbose) then
+      upcoming := upcoming + #13#10 + FormatDateTime('dd/mm hh:nn', d) + #13#10;
+
+    { Keep track of how many moons are involved in events }
+    nshadows := 0;
+    ntransits := 0;
+
+    thisevent := '';
     for whichmoon := 0 to 3 do
-      hasLastData[whichmoon] := False;
-
-    // Boucle principale (optimisée en mémoire)
-    for mins := -30 to Trunc(tothrs * 60) - 1 do
     begin
-      d := IncMinute(date, mins);
-      jup.setDate(d);
-
-      thisevent := '';
-      nshadows := 0;
-      ntransits := 0;
-
-      for whichmoon := 0 to 3 do
+      moondata := getMoonXYData(whichmoon);
+      
+      if (verbose) then
       begin
-        moondata := jup.getMoonXYData(whichmoon);
-
-        if hasLastData[whichmoon] then
-        begin
-          if not IsNaN(moondata.shadowx) then Inc(nshadows);
-          if moondata.transit then Inc(ntransits);
-
-          // Construction de la chaîne d'événement locale à cette minute
-          if IsNaN(moondata.moonx) and not IsNaN(lastmoondata[whichmoon].moonx) then
-            thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon] + ' disparaît' + sLineBreak
-          else if not IsNaN(moondata.moonx) and IsNaN(lastmoondata[whichmoon].moonx) then
-          begin
-            if not moondata.eclipse then
-              thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon] + ' réapparaît' + sLineBreak;
-          end
-          else if moondata.transit and not lastmoondata[whichmoon].transit then
-            thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon] + ' : début du transit' + sLineBreak
-          else if not moondata.transit and lastmoondata[whichmoon].transit then
-            thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon] + ' : fin du transit' + sLineBreak
-          else if moondata.eclipse and not lastmoondata[whichmoon].eclipse then
-            thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon] + ' : début éclipse' + sLineBreak
-          else if not moondata.eclipse and lastmoondata[whichmoon].eclipse then
-            thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon] + ' : quitte l''éclipse' + sLineBreak;
-
-          if IsNaN(moondata.shadowx) and not IsNaN(lastmoondata[whichmoon].shadowx) then
-            thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon] + ' : l''ombre disparaît' + sLineBreak
-          else if not IsNaN(moondata.shadowx) and IsNaN(lastmoondata[whichmoon].shadowx) then
-            thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon] + ' : l''ombre apparaît' + sLineBreak;
-        end;
-
-        lastmoondata[whichmoon] := moondata;
-        hasLastData[whichmoon] := True;
+        upcoming := upcoming + ' (' + IntToStr(whichmoon) + '):' + #13#10;
+        { JSON.stringify omitted for brevity in verbose mode, but logic preserved }
       end;
 
-      // Vérification de visibilité uniquement si un événement a eu lieu (gain CPU)
-      if thisevent <> '' then
+      if (hasLastData[whichmoon]) then
       begin
-        vdate := FormatDateTime(DateFormatChars, d);
-        vheure := FormatDateTime(TimeFormatChars, d);
-        jj := julien(vdate, vheure);
+        { Count total events }
+        if not IsNaN(shadowx) then
+          Inc(nshadows);
+        if (transit) then
+          Inc(ntransits);
 
-        orbites(jj, 4, vr1, vr2, vr3, vr4, delta, vr5, alpha);
-        calc_soleil(jj, alphaS, deltaS, vr1, vr2, vr3, vr4, vr5, vr6, vr7);
-        IsVisible := visible(jj, alpha, delta, alphaS, deltaS);
-
-        if IsVisible then
+        if IsNaN(moonx) and not IsNaN(lastmoondata[whichmoon].moonx) then
+          thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': '
+                       + moonnames[whichmoon] + ' disparaît' + #13#10
+        else if not IsNaN(moonx) and IsNaN(lastmoondata[whichmoon].moonx) then
         begin
-          // Si plusieurs phénomènes simultanés, on l'écrit
-          if (nshadows + ntransits > 1) then
-            WriteLn(fichier, pluralize(ntransits, 'transit'), ', ', pluralize(nshadows, 'ombre'));
+          if not eclipse then
+            thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': '
+                         + moonnames[whichmoon] + ' réapparaît' + #13#10;
+        end
+        else if transit and not lastmoondata[whichmoon].transit then
+          thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon]
+                       + ' : début du transit' + #13#10
+        else if not transit and lastmoondata[whichmoon].transit then
+          thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon]
+                       + ' : fin du transit' + #13#10
+        else if eclipse and not lastmoondata[whichmoon].eclipse then
+          thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon]
+                       + ' : début éclipse' + #13#10
+        else if not eclipse and lastmoondata[whichmoon].eclipse then
+          thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon]
+                       + ' : quitte l''éclipse' + #13#10;
 
-          // Écriture immédiate du bloc d'événements
-          Write(fichier, thisevent);
-        end;
+        if IsNaN(shadowx) and not IsNaN(lastmoondata[whichmoon].shadowx) then
+          thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon]
+                       + ' : l''ombre disparaît' + #13#10
+        else if not IsNaN(shadowx) and IsNaN(lastmoondata[whichmoon].shadowx) then
+          thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon]
+                       + ' : l''ombre apparaît' + #13#10;
       end;
-    end;
 
-  finally
-    CloseFile(fichier);
+      { Logic for cloning: In Delphi, record assignment copies data }
+      lastmoondata[whichmoon] := clone(moondata);
+      hasLastData[whichmoon] := True;
+    end; { end loop over whichmoon }
+
+    if thisevent<>'' then
+     begin
+      {Test si Jupiter est visible hauteur>0 et Soleil<0}
+      {Récupérer Alpha et Delta Jupiter}
+        vdate:= FormatDateTime( DateFormatChars, d);
+        vheure:= FormatDateTime( TimeFormatChars, d);
+        jj:=julien(vdate,vheure);
+	orbites(jj,4,vr1,vr2,vr3,vr4,delta,vr5,alpha); {dans Ast_Plan}
+        calc_soleil(jj,alphaS,deltaS,vr1,vr2,vr3,vr4,vr5,vr6,vr7);
+	IsVisible:=visible(jj,alpha,delta,alphaS,deltaS) ; {dans Ast_gen}
+       end;
+
+    if not isvisible then thisevent:='';
+
+
+    if (thisevent <> '') and (nshadows + ntransits > 1) then
+
+    upcoming := upcoming +  pluralize(ntransits, 'transit')
+                 + ', ' + pluralize(nshadows, 'ombre')  + #13#10;
+
+    upcoming := upcoming + thisevent;
+
+
   end;
-
-  lastmoondata[0].clear;
-  lastmoondata[1].clear;
-  lastmoondata[2].clear;
-  lastmoondata[3].clear;
-  moondata.clear;
-
+  writeln(fichier,upcoming);
+  close(fichier);
+  if (saveDate <> 0) then
+    setDate(saveDate);
+    Result := 'OK';
 end;
 
 function endsWith(const str, suffix: string): Boolean;
@@ -677,6 +675,14 @@ begin
   else
     Result := IntToStr(num) + ' ' + word + 's';
 end;
+
+function EvenementsAVenir(date: TDateTime; tothrs: Double): string;
+var
+ jup : tjupiter;
+begin
+EvenementsAVenir:=upcomingEvents(jup,date,tothrs);
+end;
+
 
 end.
 

@@ -16,11 +16,10 @@ Unit Ast_JupiterMoons;
 interface
 
 uses AST_GEN,AST_PLAN,AST_SUN,SysUtils, Math, DateUtils,Ast_Fic;
-//,Ast_Gen,Ast_Plan,Dialogs;
 
 type
   { object that has .x and .y }
-  TXYCoord = record
+  TXYCoord =  record
     x: Double;
     y: Double;
   end;
@@ -71,19 +70,19 @@ type
 
   public
     constructor Create;
+    destructor Destroy; override;
     function getDate: TDateTime;
     procedure setDate(initDate: TDateTime);
     function getMoonXYData(whichmoon: Integer): TMoonData;
     function getRedSpotXY(spot_in_deg: Double): TXYCoord;
     function getJovianPointX(long_in_deg: Double; systm: Integer): Double;
-
     property CurrentDate: TDateTime read curdate;
   end;
 
 { Global helper functions }
 function dist(x, y: Double): Double;
 function prettytime(tothrs: Double): string;
-function upcomingEvents(jup: TJupiter; date: TDateTime; tothrs: Double): string;
+Procedure upcomingEvents(jup: TJupiter; date: TDateTime; tothrs: Double);
 function endsWith(const str, suffix: string): Boolean;
 function pluralize(num: Integer; const word: string): string;
 
@@ -126,6 +125,10 @@ begin
     moonDist[i] := NaN;
   end;
 end;
+destructor TJupiter.Destroy;
+begin
+  inherited Destroy;
+end;
 
 function TJupiter.getDate: TDateTime;
 begin
@@ -158,7 +161,8 @@ end;
 procedure TJupiter.setDate(initDate: TDateTime);
 var
   V, M, N, J, A, B, K, R, r_vec, lambda,deltaT: Double;
-  year : Integer;
+  year,month : word;
+  day : word;
   begin
   { Calculate the position of Jupiter's central meridian,
     and the corresponding moonAngle and moonDist arrays;
@@ -177,7 +181,7 @@ var
   calculate delta-T (in seconds) for any year between 0 to 3000
   aussi dans https://github.com/soniakeys/meeus}
   
-  year:=2026;
+  DecodeDate(curdate, year, month,day);         //récupérer l'année courante
    
     if (year < 500) then
 	 begin
@@ -439,8 +443,7 @@ begin
   end;
 
   Result := moondata;
-  moondata.clear;
-end;
+  end;
 
 //CM( System I) =   156.84 + 877.8169147 * jd + correction
 //CM( System II) =  181.62 + 870.1869147 * jd + correction
@@ -540,153 +543,127 @@ end;
 {
   Build a table of upcoming moon events for a given interval.
 }
-function upcomingEvents(jup: TJupiter; date: TDateTime; tothrs: Double): string;
+procedure upcomingEvents(jup: TJupiter; date: TDateTime; tothrs: Double);
 var
   saveDate: TDateTime;
-  upcoming: string;
   moonnames: array[0..3] of string;
   d: TDateTime;
   lastmoondata: array[0..3] of TMoonData;
   moondata: TMoonData;
-  verbose: Boolean;
   mins, whichmoon: Integer;
   nshadows, ntransits: Integer;
   thisevent: string;
   hasLastData: array[0..3] of Boolean;
-  fichier : text;
-  vr1 : real;
-  vr2 : real;
-  vr3 : real;
-  vr4 : real;
-  vr5 : real;
-  vr6 : real;
-  vr7 : real;
-  delta : real;
-  alpha : str8;
-  deltaS : real;
-  alphaS : str8;
-  IsVisible : boolean;
-  jj : real;
-  vdate : str10;
-  vheure : str8;
- const
+  fichier : TextFile; // Utilisation du type standard TextFile
+
+  // Variables pour Ast_Plan / Ast_Gen
+  vr1, vr2, vr3, vr4, vr5, vr6, vr7, delta, jj, deltaS: Double;
+  alpha, alphaS: str8;
+  vdate, vheure: string;
+  IsVisible: Boolean;
+
+const
   DateFormatChars = 'dd/mm/yyyy';
   TimeFormatChars = 'hh:nn:ss';
 begin
+  AssignFile(fichier, 'galileens.txt');
+  Rewrite(fichier);
 
-  assignfile(fichier,'galileens.txt');
-  rewrite(fichier);
   saveDate := jup.getDate;
-  upcoming:='Le '+FormatDateTime('dd/mm/yyyy hh:nn', Date) + #13#10#13#10;
-  upcoming := upcoming+'Ephémérides des lunes de Jupiter pour les prochain(e)s : '
-              + prettytime(tothrs) + ':' + #13#10#13#10;
 
-  moonnames[0] := 'Io';
-  moonnames[1] := 'Europe';
-  moonnames[2] := 'Ganymède';
-  moonnames[3] := 'Callisto';
+  try
+    // Écriture de l'en-tête directement dans le fichier
+    WriteLn(fichier, 'Le ', FormatDateTime('dd/mm/yyyy hh:nn', date),' !!Les heures sont en temps universel!!');
+    WriteLn(fichier, 'Ephémérides des lunes de Jupiter pour les prochain(e)s : ', prettytime(tothrs), ':');
+    WriteLn(fichier, '');
 
-  d := date;
-  for whichmoon := 0 to 3 do
-    hasLastData[whichmoon] := False;
+    moonnames[0] := 'Io';
+    moonnames[1] := 'Europe';
+    moonnames[2] := 'Ganymède';
+    moonnames[3] := 'Callisto';
 
-  verbose := False;
-
-  for mins := -30 to Trunc(tothrs * 60) - 1 do
-  begin
-    d := IncMinute(date, mins);
-    jup.setDate(d);
-    
-    if (verbose) then
-      upcoming := upcoming + #13#10 + FormatDateTime('dd/mm hh:nn', d) + #13#10;
-
-    { Keep track of how many moons are involved in events }
-    nshadows := 0;
-    ntransits := 0;
-
-    thisevent := '';
     for whichmoon := 0 to 3 do
+      hasLastData[whichmoon] := False;
+
+    // Boucle principale (optimisée en mémoire)
+    for mins := -30 to Trunc(tothrs * 60) - 1 do
     begin
-      moondata := jup.getMoonXYData(whichmoon);
-      
-      if (verbose) then
-      begin
-        upcoming := upcoming + ' (' + IntToStr(whichmoon) + '):' + #13#10;
-        { JSON.stringify omitted for brevity in verbose mode, but logic preserved }
-      end;
+      d := IncMinute(date, mins);
+      jup.setDate(d);
 
-      if (hasLastData[whichmoon]) then
-      begin
-        { Count total events }
-        if not IsNaN(moondata.shadowx) then
-          Inc(nshadows);
-        if (moondata.transit) then
-          Inc(ntransits);
+      thisevent := '';
+      nshadows := 0;
+      ntransits := 0;
 
-        if IsNaN(moondata.moonx) and not IsNaN(lastmoondata[whichmoon].moonx) then
-          thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': '
-                       + moonnames[whichmoon] + ' disparaît' + #13#10
-        else if not IsNaN(moondata.moonx) and IsNaN(lastmoondata[whichmoon].moonx) then
+      for whichmoon := 0 to 3 do
+      begin
+        moondata := jup.getMoonXYData(whichmoon);
+
+        if hasLastData[whichmoon] then
         begin
-          if not moondata.eclipse then
-            thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': '
-                         + moonnames[whichmoon] + ' réapparaît' + #13#10;
-        end
-        else if moondata.transit and not lastmoondata[whichmoon].transit then
-          thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon]
-                       + ' : début du transit' + #13#10
-        else if not moondata.transit and lastmoondata[whichmoon].transit then
-          thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon]
-                       + ' : fin du transit' + #13#10
-        else if moondata.eclipse and not lastmoondata[whichmoon].eclipse then
-          thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon]
-                       + ' : début éclipse' + #13#10
-        else if not moondata.eclipse and lastmoondata[whichmoon].eclipse then
-          thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon]
-                       + ' : quitte l''éclipse' + #13#10;
+          if not IsNaN(moondata.shadowx) then Inc(nshadows);
+          if moondata.transit then Inc(ntransits);
 
-        if IsNaN(moondata.shadowx) and not IsNaN(lastmoondata[whichmoon].shadowx) then
-          thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon]
-                       + ' : l''ombre disparaît' + #13#10
-        else if not IsNaN(moondata.shadowx) and IsNaN(lastmoondata[whichmoon].shadowx) then
-          thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon]
-                       + ' : l''ombre apparaît' + #13#10;
+          // Construction de la chaîne d'événement locale à cette minute
+          if IsNaN(moondata.moonx) and not IsNaN(lastmoondata[whichmoon].moonx) then
+            thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon] + ' disparaît' + sLineBreak
+          else if not IsNaN(moondata.moonx) and IsNaN(lastmoondata[whichmoon].moonx) then
+          begin
+            if not moondata.eclipse then
+              thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon] + ' réapparaît' + sLineBreak;
+          end
+          else if moondata.transit and not lastmoondata[whichmoon].transit then
+            thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon] + ' : début du transit' + sLineBreak
+          else if not moondata.transit and lastmoondata[whichmoon].transit then
+            thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon] + ' : fin du transit' + sLineBreak
+          else if moondata.eclipse and not lastmoondata[whichmoon].eclipse then
+            thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon] + ' : début éclipse' + sLineBreak
+          else if not moondata.eclipse and lastmoondata[whichmoon].eclipse then
+            thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon] + ' : quitte l''éclipse' + sLineBreak;
+
+          if IsNaN(moondata.shadowx) and not IsNaN(lastmoondata[whichmoon].shadowx) then
+            thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon] + ' : l''ombre disparaît' + sLineBreak
+          else if not IsNaN(moondata.shadowx) and IsNaN(lastmoondata[whichmoon].shadowx) then
+            thisevent := thisevent + FormatDateTime('dd/mm hh:nn', d) + ': ' + moonnames[whichmoon] + ' : l''ombre apparaît' + sLineBreak;
+        end;
+
+        lastmoondata[whichmoon] := moondata;
+        hasLastData[whichmoon] := True;
       end;
 
-      { Logic for cloning: In Delphi, record assignment copies data }
-      lastmoondata[whichmoon] := clone(moondata);
-      hasLastData[whichmoon] := True;
-    end; { end loop over whichmoon }
+      // Vérification de visibilité uniquement si un événement a eu lieu (gain CPU)
+      if thisevent <> '' then
+      begin
+        vdate := FormatDateTime(DateFormatChars, d);
+        vheure := FormatDateTime(TimeFormatChars, d);
+        jj := julien(vdate, vheure);
 
-    if thisevent<>'' then
-     begin
-      {Test si Jupiter est visible hauteur>0 et Soleil<0}
-      {Récupérer Alpha et Delta Jupiter}
-        vdate:= FormatDateTime( DateFormatChars, d);
-        vheure:= FormatDateTime( TimeFormatChars, d);
-        jj:=julien(vdate,vheure);
-	orbites(jj,4,vr1,vr2,vr3,vr4,delta,vr5,alpha); {dans Ast_Plan}
-        calc_soleil(jj,alphaS,deltaS,vr1,vr2,vr3,vr4,vr5,vr6,vr7);
-	IsVisible:=visible(jj,alpha,delta,alphaS,deltaS) ; {dans Ast_gen}
-       end;
+        orbites(jj, 4, vr1, vr2, vr3, vr4, delta, vr5, alpha);
+        calc_soleil(jj, alphaS, deltaS, vr1, vr2, vr3, vr4, vr5, vr6, vr7);
+        IsVisible := visible(jj, alpha, delta, alphaS, deltaS);
 
-    if not isvisible then thisevent:='';
+        if IsVisible then
+        begin
+          // Si plusieurs phénomènes simultanés, on l'écrit
+          if (nshadows + ntransits > 1) then
+            WriteLn(fichier, pluralize(ntransits, 'transit'), ', ', pluralize(nshadows, 'ombre'));
 
+          // Écriture immédiate du bloc d'événements
+          Write(fichier, thisevent);
+        end;
+      end;
+    end;
 
-    if (thisevent <> '') and (nshadows + ntransits > 1) then
-
-    upcoming := upcoming +  pluralize(ntransits, 'transit')
-                 + ', ' + pluralize(nshadows, 'ombre')  + #13#10;
-
-    upcoming := upcoming + thisevent;
-
-
+  finally
+    CloseFile(fichier);
   end;
-  writeln(fichier,upcoming);
-  close(fichier);
-  if (saveDate <> 0) then
-    jup.setDate(saveDate);
-    Result := 'OK';
+
+  lastmoondata[0].clear;
+  lastmoondata[1].clear;
+  lastmoondata[2].clear;
+  lastmoondata[3].clear;
+  moondata.clear;
+
 end;
 
 function endsWith(const str, suffix: string): Boolean;
