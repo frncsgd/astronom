@@ -63,13 +63,10 @@ begin
 procedure TForm3.Button2Click(Sender: TObject);
 
 var
-  chaine 	: string;
   date		: string [10];
   heure		: string [8];
-  hmeridien     : string [8];
-  hcoucher	: string [8];
-  hleversol	: string [8];
-  hcouchersol	: string [8];
+  hleversol,aurore	: string [8];
+  hcouchersol,crepuscule	: string [8];
   instant 	: real;
   greenwich	: real;
   hauteur	: real;
@@ -86,10 +83,8 @@ var
  fdat : file of Messier_cat;
  vdat : messier_cat;
  n	: integer;
- tri	: integer;
  fichier : textfile;
 
- choix	: integer;
  hleversol2 : real;
  hcouchersol2 : real;
  twilight2	: real;
@@ -124,44 +119,39 @@ hmini:=5;
  writeln(fichier,'<title>Positions des Objets Messier</title>');
  writeln(fichier,'</head>');
 
-  writeln(fichier,'<p align="center"><font size="2">Hauteur et Azimut des Objets');
-  writeln(fichier,'de Messier le ',date,' - ',heure,' <BR> Hauteur mini : ',hmini, ' degres </font></p>');
+ writeln(fichier,'<p align="center">Hauteur et Azimut des Objets de Messier le ',date,' - ',heure,' <BR> Hauteur mini : ',hmini, ' degres pour Latitude ',global_latitude:5:2,'degres/Longitude ',global_longitude:5:2,'degres<br>');
 
 
-  writeln(fichier,'<p align="center"><font size="2">Latitude ',global_latitude:5:2,'deg.');
-  writeln(fichier,'Longitude ',global_longitude:5:2,'deg.</font></p>');
+  hcouchersol:=heure;
+  for n:=1 to 10 do
+    begin
+     t:=julien(date,hcouchersol);
+     calc_soleil(t,alpha,delta,rayon,longvraie,longvraie,longvraie,m,parallaxe,angsize);
+     levercoucher(false,alpha,greenwich,global_latitude,global_longitude,delta,0,-angsize,hcouchersol);
+    end;
 
-
-  writeln(fichier,'<p><font size="2">Informations Eclairage Soleil</font><br>');
-
- t:=julien(date,heure);
- calc_soleil(t,alpha,delta,rayon,longvraie,longvraie,longvraie,m,parallaxe,angsize);
-
- levercoucher(true,alpha,greenwich,global_latitude,global_longitude,delta,0,angsize,hleversol);
- levercoucher(false,alpha,greenwich,global_latitude,global_longitude,delta,0,-angsize,hcouchersol);
-
-
- writeln(fichier,'Nuit astronomique : +/-',twilight(delta,global_latitude),'<BR>');
+  hleversol:=heure;
+  for n:=1 to 10 do
+    begin
+     t:=julien(date,hleversol)+1;   {+1 car lendemain le soleil se lève};
+     calc_soleil(t,alpha,delta,rayon,longvraie,longvraie,longvraie,m,parallaxe,angsize);
+     levercoucher(true,alpha,greenwich,global_latitude,global_longitude,delta,0,angsize,hleversol);
+    end;
 
  heuremindec(hleversol,hleversol2);
  heuremindec(hcouchersol,hcouchersol2);
- writeln(fichier,'Coucher : ',hcouchersol,'<BR>');
- writeln(fichier,'Lever  : ',hleversol,'<BR>');
  heuremindec(twilight(delta,global_latitude),twilight2);
 
  hleversol2:=hleversol2-twilight2;
  hcouchersol2:=hcouchersol2+twilight2;
 
- heuredecmin(hleversol2,hleversol);
- heuredecmin(hcouchersol2,hcouchersol);
+ heuredecmin(hleversol2,aurore);
+ heuredecmin(hcouchersol2,crepuscule);
 
-
- writeln(fichier,'Debut Nuit Astronomique : ',hcouchersol,'<BR>');
- writeln(fichier,'Fin Nuit Astromique : ',hleversol,'<BR>');
- writeln(fichier,'<BR>');
+ writeln(fichier,'Infos Soleil-->Coucher : ',hcouchersol,'-->Debut Nuit Astronomique : ',crepuscule,'-->Fin Nuit Astronomique  : ',aurore,'-->Lever  : ',hleversol,'<BR>');
 
  coordlune(date,hcouchersol,a1,a2,lambda,deltalune,alphalune);
- writeln(Fichier,'Lune coeff=',lambda:3:2,' alpha=',alphalune,' et delta=',deltalune:6:2);
+ writeln(Fichier,'Infos Lune --> coeff=',lambda:3:2,' alpha=',alphalune,' et delta=',deltalune:6:2);
  writeln(fichier,'<BR>');
 
  writeln(fichier,'<table border="1" width="100%">');
@@ -217,7 +207,7 @@ hmini:=5;
   closefile(fdat);
 
     writeln(fichier,'</table>');
-
+    writeln(fichier,'<p align="left">');
     writeln(fichier,'Definition des Types: <BR>');
     writeln(fichier,'   1  Open Cluster<BR>');
     writeln(fichier,'   2  Globular Cluster<BR>');

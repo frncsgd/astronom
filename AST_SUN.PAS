@@ -6,8 +6,7 @@ Interface
 
 (* ajout ast_dive le 06/02/2021 pour usage fonction twilight heure nuit astronomique*)
 
-Uses LCLIntf, LCLType,SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls,AST_FIC,AST_GEN,math;
+Uses AST_FIC;   { str8, str10 }
 
 
 procedure calc_soleil(jourjulien : real;var alpha:str8;var delta:real;var rayon:real;
@@ -25,7 +24,23 @@ function numero_crn(date:str10;heure:str8):real;
 
 implementation
 
-var fichier : text;
+Uses SysUtils, Classes, Math, DateUtils, Controls, Dialogs, LCLIntf, AST_GEN,AST_DIVE;
+
+const
+    NOMS_MOIS : array[1..12] of string[10] =
+    ('JANVIER','FEVRIER','MARS','AVRIL','MAI','JUIN','JUILLET','AOUT',
+     'SEPTEMBRE','OCTOBRE','NOVEMBRE','DECEMBRE');
+
+{ ------------------------------------------------------------------ }
+{  Utilitaires                                                         }
+{ ------------------------------------------------------------------ }
+
+{ ' 5: 3: 7' -> '05:03:07' ; ' 5/ 3/2021' -> '05/03/2021'
+(heuredecmin et invjulien completent avec des espaces) }
+function Zeros(const s : string) : string;
+  begin
+   Result := StringReplace(s, ' ', '0', [rfReplaceAll]);
+  end;
 
 procedure calc_soleil(jourjulien : real;var alpha:str8;var delta:real;var rayon:real;
                               var longvraie,anomvraie :real;var epsilon : real;var m : real;
@@ -60,7 +75,7 @@ begin
  pc:=312.69+32964.3577*t;
  pd:=350.74+445267.1142*t-0.00144*sqr(t);
  pe:=231.19+20.2*t;
- ph:=353.4+65928.7155*t;
+{ ph:=353.4+65928.7155*t;}
 
  l:=l+0.00134*cosinus(pa);
  l:=l+0.00154*cosinus(pb);
@@ -97,38 +112,12 @@ begin
  angsize:=angsize*2;
  end;
 
-procedure angles_pbl_OLD(jjulien:real;var p,b0,l0 : real);
-var
- t,delta,omega,bidon2,anomvraie,epsilon,lambda0,m,x,y,a,zeta1,zeta2 : real;
- bidon                          : str8;
-begin
- t:=(jjulien-2415020)/36525;
- delta:=(84*t)/60;
- omega:=74.3666666+delta;
- calc_soleil(jjulien,bidon,bidon2,bidon2,bidon2,anomvraie,epsilon,bidon2,bidon2,bidon2);
- lambda0:=anomvraie+282.596403;
- range0a360(lambda0,lambda0);
- y:=sinus(omega-lambda0)*cosinus(7.25);
- x:=-cosinus(omega-lambda0);
- corriquad(x,y,a);
- m:=360/25.38*(jjulien-2398220);
- range0a360(m,m);
- m:=360-m;
- l0:=a+m;
- range0a360(l0,l0);
- b0:=arcsinus(sinus(omega-lambda0)*sinus(7.25));
- b0:=-b0;
- zeta1:=180/pi*arctan(-cosinus(lambda0)*tangente(epsilon));
- zeta2:=180/pi*arctan(-cosinus(omega-lambda0)*tangente(7.25));
- p:=zeta1+zeta2;
-end;
-
 procedure angles_pbl(jd:real;var p,b0,l0 : real);
 (*source : view-source:https://www.bogan.ca/astro/sun/sunspots.html
 puis
 https://www.codeconvert.ai/java-to-pascal-converter*)
 var
-   theta, inc, k, t, t2, t3, M, Mr, C, sunL, v, omega, lngtd, lngtdr, diffk, oblr, tx, ty, x, y, Pr, B0r, etay, etax, eta, L0r, CarrNo: Double;
+   theta, inc, k, t, t2, t3, M, Mr, C, sunL, omega, lngtd, lngtdr, diffk, oblr, tx, ty, x, y, Pr, B0r, etay, etax, eta: Double;
    radian: Real;
 
 begin
@@ -144,7 +133,6 @@ begin
   Mr := M / radian;
   C := (1.914600 - 0.004817 * t - 0.000014 * t2) * sin(Mr) + (0.019993 - 0.000101 * t) * sin(2 * Mr) + 0.000290 * sin(3 * Mr);
   sunL := L0 + C;
-  v := M + C;
   omega := 125.04 - 1934.136 * t;
   lngtd := sunL - 0.00569 - 0.00478 * sin(omega / radian);
   lngtdr := lngtd / radian;
@@ -162,11 +150,7 @@ begin
   etax := -cos(diffk);
   eta := arctan2(etay, etax) * radian;      (*arctan2*)
   L0 := eta - theta;
-  (*L0 := Trunc(L0);  *)
   range0a360(l0,l0);
-  L0r := L0 / radian;
-  CarrNo := ((jd - 2398140.22710) / 27.2752316);
-
 end;
 
 procedure chap15(date:str10;heure:str8;var alpha:str8;var delta:real;var rayon:real;
@@ -195,6 +179,7 @@ end;
 
 procedure edit_soleil(an,mo:word;latitude,longitude:real);
 var
+ f                : TextFile;
  n                : integer;
  chaine           : string;
  jo               : word;
@@ -204,49 +189,31 @@ var
  fin                                     : boolean;
  nomdumois                               : str10;
  nomfichier                              : RawByteString;
- alpha_coucher,alpha_lever                          : str8;
-  hleversol2 : real;
- hcouchersol2 : real;
- twilight2	: real;
+ hleversol2,hcouchersol2,twilight2 : real;
+ debutNuitAstro,finNuitAstro : str8;
+
 begin
 
 jo:=1;
 
 fin:=false;
 
-case mo of
- 1 : nomdumois:='JANVIER';
- 2 : nomdumois:='FEVRIER';
- 3 : nomdumois:='MARS';
- 4 : nomdumois:='AVRIL';
- 5 : nomdumois:='MAI';
- 6 : nomdumois:='JUIN';
- 7 : nomdumois:='JUILLET';
- 8 : nomdumois:='AOUT';
- 9 : nomdumois:='SEPTEMBRE';
- 10: nomdumois:='OCTOBRE';
- 11: nomdumois:='NOVEMBRE';
- 12: nomdumois:='DECEMBRE';
-end;
+nomfichier:=Format('ephemSol%d_%.2d.txt', [an, mo]);
 
-str(mo,chaine);
-nomfichier:='ephemSol'+chaine+'.txt';
+assign(f,nomfichier);
+rewrite(f);
 
-assign(fichier,nomfichier);
-rewrite(fichier);
-
-writeln(fichier,'EPHEMERIDES ASTRONOMIQUES - SOLEIL - ',nomdumois,' ',an:4);
-
-writeln(fichier,'');
-writeln(fichier,'Latitude = ',latitude:6:2,' degres   Longitude : ',longitude:7:2,' degres');
-writeln(fichier,'___________________________________________________________________________');
-writeln(fichier,'                               Position … 12hUT');
-writeln(fichier,'                Date    Temps  Ascensio  Decli');
-writeln(fichier,'   JOUR       Julienne Sideral  Droite  naison         Heures en UT');
-writeln(fichier,'              … 12h UT Greenwich                  Lever  Meridien Coucher');
-writeln(fichier,'                       … 0h UT');
-writeln(fichier,'___________________________________________________________________________');
-writeln(fichier,'');
+  writeln(f, 'EPHEMERIDES ASTRONOMIQUES - SOLEIL - ', NOMS_MOIS[mo], ' ', an:4);
+  writeln(f, '');
+  writeln(f, 'Latitude = ', latitude:6:2, ' degrés   Longitude : ', longitude:7:2, ' degrés');
+  writeln(f, StringOfChar('_', 91));
+  writeln(f, '                               Position à 12hUT');
+  writeln(f, '                Date    Temps  Ascensio  Decli');
+  writeln(f, '   JOUR       Julienne Sideral  Droite  naison         Heures en UT');
+  writeln(f, '              à 12h UT Greenwich                  Lever  Meridien Coucher  Aurore  Crepuscule');
+  writeln(f, '                       à 0h UT');
+  writeln(f, StringOfChar('_', 91));
+  writeln(f, '');
 
 while not fin do
  begin
@@ -258,17 +225,17 @@ while not fin do
   jour:=jour+chaine;
   jjulien:=julien(jour,'12:00:00');
 
-  write(fichier,jour:10,' ',jjulien:10:0,' ');
+  write(f,jour:10,' ',jjulien:10:0,' ');
 
   jjulien:=julien(jour,'00:00:00');
   tsg(jjulien,'00:00:00',greenwich);
 
   heuredecmin(greenwich,heuregreenwich);
-  write(fichier,heuregreenwich:8,' ');
+  write(f,heuregreenwich:8,' ');
 
   chap15(jour,'12:00:00',alpha,delta,rayon,bidon,bidon,bidon,bidon,angsize);
 
-  write(fichier,alpha:8,' ',delta:6:2,' ');
+  write(f,zeros(alpha):8,' ',delta:6:2,' ');
 
   alpha2:=alpha;
   delta2:=delta;
@@ -297,17 +264,24 @@ while not fin do
    end;
 
 
-  write(fichier,lever:8,' ',hmeridien:8,' ',coucher:8);
+  write(f,zeros(lever):8,' ',zeros(hmeridien):8,' ',zeros(coucher):8);
 
-  (*Déterminer l'heure de nuit astronomique
+  (*Déterminer l'heure de nuit astronomique*)
    heuremindec(lever,hleversol2);
    heuremindec(coucher,hcouchersol2);
    heuremindec(twilight(delta,global_latitude),twilight2);
 
    hleversol2:=hleversol2-twilight2;
-   hcouchersol2:=hcouchersol2+twilight2;   *)
+   hcouchersol2:=hcouchersol2+twilight2;
 
-   writeln(fichier,'');
+   heuredecmin(hleversol2, finNuitAstro);
+   heuredecmin(hcouchersol2, DebutNuitAstro);
+
+   write(f,' ',zeros(finNuitAstro):8,' ',zeros(DebutNuitAstro):8);
+
+
+
+   writeln(f,'');
 
   inc(jo);
 
@@ -319,9 +293,9 @@ while not fin do
 
   end; (* while not fin....*)
 
-writeln(fichier,'__________________________________________________________________________');
-writeln(fichier,#12);
-close(fichier);
+writeln(f, StringOfChar('_', 91));
+writeln(f,#12);
+close(f);
 
 MessageDlg('Fin de génération, cliquer sur OK pour voir le résultat',mtInformation, [mbOK], 0);
  OpenDocument(nomfichier); { *Converti depuis ShellExecute* }
@@ -331,6 +305,7 @@ end;
 
 procedure edit_pbl(date1,date2:str10;pas:real);
 var
+ fichier : textfile;
  heure : str8;
  jjulien_dep,jjulien_arr,p,b0,l0: real;
  ok				: boolean;
@@ -343,7 +318,7 @@ rewrite(fichier);
 writeln(fichier,'Angles P, b0 et l0 du Soleil du ',date1,' au ',date2);
 writeln(fichier,'Calcul pour 12h00:00 TU');
 writeln(fichier,'');
-writeln(fichier,'En degres');
+writeln(fichier,'En degrés');
 writeln(fichier,'');
 writeln(fichier,'   Date   ',' ','    P   ',' ','   b0   ',' ','   l0   ');
 writeln(fichier,'');
@@ -404,7 +379,7 @@ var
  jjulien_dep,jjulien_arr,jjulien_inter : real;
  num_crn,jour,p,b,l      : real;
  erreur                  : integer;
-
+ fichier : textfile;
 begin
 
  str(annee,date1);
@@ -448,6 +423,7 @@ end;
 
 procedure edit_parallaxe(annee,pas:word);
 var
+ fichier : textfile;
  date1,date2   : str10;
  heure,alpha   : str8;
  angsize,rayon,parallaxe,bidon,jjulien_dep,jjulien_arr,jjulien2 : real;
@@ -471,8 +447,8 @@ writeln(fichier,'SOLEIL - Annee ',annee);
 writeln(fichier,'Parallaxe Horizontale Equatoriale, Demi-Diametre et Distance');
 writeln(fichier,'');
 writeln(fichier,'');
-writeln(fichier,'   Date    Parallaxe   Demi-Diametre     Distances … 0hUT');
-writeln(fichier,'           Horiz.Eq.     … 12hUT       EN UA   En 10000 km');
+writeln(fichier,'   Date    Parallaxe   Demi-Diametre     Distances à 0hUT');
+writeln(fichier,'           Horiz.Eq.     à 12hUT       EN UA   En 10000 km');
 writeln(fichier,'');
 
 jjulien_dep:=julien(date1,heure);
@@ -502,11 +478,6 @@ MessageDlg('Fin de génération, cliquer sur OK pour voir le résultat',mtInform
  OpenDocument('paral.txt'); { *Converti depuis ShellExecute* }
 
 end;
-
-
-
-
-
 
 
 end.

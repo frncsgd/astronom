@@ -1,46 +1,47 @@
 object Form3: TForm3
   Left = 409
+  Height = 438
   Top = 200
-  Width = 435
-  Height = 350
+  Width = 544
   Caption = 'Visiblité Objets Messier'
+  ClientHeight = 438
+  ClientWidth = 544
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
+  DesignTimePPI = 120
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -14
   Font.Name = 'MS Sans Serif'
-  Font.Style = []
+  LCLVersion = '4.4.0.0'
   OnCreate = FormCreate
-  PixelsPerInch = 96
   object Label1: TLabel
-    Left = 24
-    Top = 24
-    Width = 65
+    Left = 30
     Height = 13
+    Top = 30
+    Width = 65
     Caption = 'Date et heure'
   end
   object Button1: TButton
-    Left = 128
-    Top = 288
-    Width = 73
-    Height = 17
+    Left = 160
+    Height = 21
+    Top = 360
+    Width = 91
     Caption = 'Quitter'
     TabOrder = 0
     OnClick = Button1Click
   end
   object Edit1: TEdit
-    Left = 104
-    Top = 24
-    Width = 161
+    Left = 130
     Height = 21
+    Top = 30
+    Width = 201
     TabOrder = 1
     Text = 'Edit1'
   end
   object Button2: TButton
-    Left = 128
-    Top = 120
-    Width = 73
-    Height = 17
+    Left = 160
+    Height = 21
+    Top = 150
+    Width = 91
     Caption = 'Générer'
     TabOrder = 2
     OnClick = Button2Click
