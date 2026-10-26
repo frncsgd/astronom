@@ -4,7 +4,7 @@ Unit Ast_Moon;
 
 Interface
 
-Uses LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms,
+Uses LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls,
      AST_FIC,
      AST_GEN,
@@ -21,6 +21,12 @@ procedure physiques;
 
 
 implementation
+
+const
+    NOMS_MOIS : array[1..12] of string[10] =
+    ('JANVIER','FEVRIER','MARS','AVRIL','MAI','JUIN','JUILLET','AOUT',
+     'SEPTEMBRE','OCTOBRE','NOVEMBRE','DECEMBRE');
+
 type
  tabstr10 = array[1..5] of str10;
  tabstr8  = array[1..5] of str8;
@@ -140,6 +146,7 @@ begin
  additif(0,0.000486,(2*mprime-d));
 
  lambda:=lprime+add;
+
  range0a360(lambda,lambda);
 
  add:=0;
@@ -259,6 +266,11 @@ var
  chaine           : string;
  delta,jlunaire   : real;
  fichier          : text;
+ alphaTopo : str8;
+ deltaTopo : real;
+ jj : real;
+const
+ altitude=160;
 begin
 
 date:=copy(FormatDateTime('dd/mm/yyyy hh:mm:ss',Now),1,10);
@@ -267,21 +279,35 @@ heure:=copy(FormatDateTime('dd/mm/yyyy hh:mm:ss',Now),12,8);
 chaine:=InputBox('Position de la Lune', 'Date', date);
 date:=chaine;
 
-chaine:=InputBox('Position de la Lune', 'Heure', heure);
+chaine:=InputBox('Position de la Lune', 'Heure UTC ', heure);
 heure:=chaine;
 
 coordlune(date,heure,lambda,beta,vpi,delta,alpha);
 
+{Calcul en coordonnées topographiques}
+jj:=julien(date,heure);
+GeoVersTopo(alpha,delta,vpi,global_latitude,global_longitude,altitude,jj,alphaTopo,deltaTopo);
 
 assign(fichier,'journlune.txt');
 rewrite(fichier);
 
+writeln(fichier,'Position de la Lune le ',date,' à ',heure,' (heure UTC)');
 writeln(fichier,'Lambda = ',lambda:10:3);
 writeln(fichier,'Beta   = ',beta:10:3);
+writeln(fichier,'Vpi   = ',vpi:10:3);
 heuredecmin(vpi,par);
 writeln(fichier,'Parallaxe = ',par:10);
+writeln(fichier,'Les coordonnées ci-dessous sont en position GEOcentrique');
 writeln(fichier,'Alpha  = ',alpha:8);
 writeln(fichier,'Delta  = ',delta:6:2);
+writeln(fichier,'');
+writeln(fichier,'Les coordonnées ci-dessous sont en position TOPOgraphiques');
+writeln(fichier,'Alpha  = ',alphatopo:8);
+writeln(fichier,'Delta  = ',deltatopo:6:6);
+writeln(fichier,'');
+writeln(fichier,'Définitions :');
+writeln(fichier,'Coordonnées géocentriques : l''observateur est placé au centre de la Terre.');
+writeln(fichier,'Coordonnées topocentriques : l''observateur est placé à la surface de la Terre, à un emplacement géographique donné.');
 close(fichier);
 
 MessageDlg('Fin de génération, cliquer sur OK pour voir le résultat',mtInformation, [mbOK], 0);
@@ -445,21 +471,6 @@ jo:=1;
 
 fin:=false;
 
-case mo of
- 1 : nomdumois:='JANVIER';
- 2 : nomdumois:='FEVRIER';
- 3 : nomdumois:='MARS';
- 4 : nomdumois:='AVRIL';
- 5 : nomdumois:='MAI';
- 6 : nomdumois:='JUIN';
- 7 : nomdumois:='JUILLET';
- 8 : nomdumois:='AOUT';
- 9 : nomdumois:='SEPTEMBRE';
- 10: nomdumois:='OCTOBRE';
- 11: nomdumois:='NOVEMBRE';
- 12: nomdumois:='DECEMBRE';
-end;
-
 mo0:=mo-1;
 an0:=an;
 if mo0=0 then
@@ -476,19 +487,24 @@ if (copy(date[1],4,2)=copy(date[5],4,2)) and (premphase=1) then datedep:=date[5]
   jour:=jour+chaine+'/';
   str(an:4,chaine);
   jour:=jour+chaine;
-jourlune:=julien(jour,'00-00-0000')-julien(datedep,'00:00:00');
+  jourlune:=julien(jour,'00-00-0000')-julien(datedep,'00:00:00');
 
-calc_phases(mo,an,date,heure,premphase);
+  calc_phases(mo,an,date,heure,premphase);
 
-str(mo,chaine);
-nomfichier:='ephemLune'+chaine+'.txt';
+  nomfichier:=Format('ephemLune%d_%.2d.txt', [an, mo]);
 
-assign(lst,nomfichier);
-rewrite(lst);
+  assign(lst,nomfichier);
+  rewrite(lst);
 
-writeln(lst,'EPHEMERIDES ASTRONOMIQUES - LUNE - ',nomdumois,' ',an:4);
+  writeln(lst,'EPHEMERIDES ASTRONOMIQUES - LUNE - ',NOMS_MOIS[mo],' ',an:4);
 
-writeln(lst,'');
+  writeln(lst,'en coordonnées GEOcentriques');
+
+(*
+Coordonnées géocentriques : l'observateur est placé au centre de la Terre. C'est ce que calcule ton programme Pascal.
+Coordonnées topocentriques : l'observateur est placé à la surface de la Terre, à un emplacement géographique donné. C'est ce que Stellarium utilisait auparavant.
+*)
+
 writeln(lst,'Latitude = ',latitude:6:2,' degres   Longitude : ',longitude:7:2,' degres');
 writeln(lst,'__________________________________________________________________________');
 writeln(lst,'                       Position … 0hUT');
@@ -499,16 +515,12 @@ writeln(lst,'');
 
 while not fin do
  begin
-
-
-
   str(jo:2,chaine);
   jour:=chaine+'/';
   str(mo:2,chaine);
   jour:=jour+chaine+'/';
   str(an:4,chaine);
   jour:=jour+chaine;
-  jjulien:=julien(jour,'12:00:00');
 
   write(lst,jour:10,' ');
 

@@ -3,10 +3,11 @@ Unit AST_GEN;
 {$MODE Delphi}
 
 interface
-uses LCLIntf, LCLType, SysUtils,AST_FIC,Dialogs;
+uses LCLIntf, LCLType, SysUtils,AST_FIC,Dialogs,Math;
 
 const
- unite_astronomique=149597870;
+ unite_astronomique = 149597870;     { km }
+ HEURE_ABSENTE      = '--:--:--';    { pas de lever / coucher (jour ou nuit polaire) }
 
 function Power(X, Y: Real): Real;
 function sinus(valeur:real):real;
@@ -41,11 +42,17 @@ function visible(jj : real;alpha : str8;delta : real;alphaS : str8;deltaS : real
 
 implementation
 
+const
+  REFRACTION_DEG = 0.566;     { 34' de refraction atmospherique a l'horizon }
 
-function Power(X, Y: Real): Real;
-begin
-	Power := Exp(Y * Ln(X));
-end;
+  { ------------------------------------------------------------------ }
+  {  Trigonometrie en degres                                             }
+  { ------------------------------------------------------------------ }
+
+  function Power(X, Y: Real): Real;
+  begin
+    Result := Math.Power(X, Y);
+  end;
 
 function sinus(valeur:real):real;
 var resultat : real;
@@ -68,177 +75,343 @@ begin
  tangente:=resultat;
 end;
 
+{ Les arguments sont ramenes dans [-1, 1] : une erreur d'arrondi
+  (1.0000000000000002) ne provoque plus d'exception. }
 function arcsinus(valeur:real):real;
-var resultat : real;
 begin
-resultat:=sqrt(1-sqr(valeur));
-resultat:=180/pi*arctan(valeur/resultat);
-arcsinus:=resultat;
+  if valeur > 1 then valeur := 1;
+  if valeur < -1 then valeur := -1;
+  Result := RadToDeg(ArcSin(valeur));
 end;
 
 function arccosinus(valeur:real):real;
-var
-x,y,resultat : real;
 begin
-
-y:=sqrt((1-sqr(valeur)));
-x:=valeur;
-corriquad(x,y,resultat);
-arccosinus:=resultat;
+  if valeur > 1 then valeur := 1;
+  if valeur < -1 then valeur := -1;
+  Result := RadToDeg(ArcCos(valeur));
 end;
-
+{ ramene entree dans [0, 360[ (sans boucle : sur pour les grandes valeurs) }
 procedure range0a360(entree:real;var sortie:real);
-var
- resultat :real;
- entier	: integer;
 begin
-
-while entree<0 do entree:=entree+360;
-while entree>=360 do entree:=entree-360;
-sortie:=entree;
+  entree := entree - 360.0*Int(entree/360.0);
+  if entree < 0 then entree := entree + 360.0;
+  if entree >= 360.0 then entree := 0;      { arrondi flottant, ex. -1E-20 }
+  sortie := entree;
 end;
 
+{ ramene x dans [0, 24[ }
+function range0a24(x : real) : real;
+begin
+  x := x - 24.0*Int(x/24.0);
+  if x < 0 then x := x + 24.0;
+  if x >= 24.0 then x := 0;
+  Result := x;
+end;
+
+{ angle polaire de (x,y) en degres, dans [0, 360[ }
 procedure corriquad(x,y:real;var resu:real);
 begin
-
- if x<>0 then resu:=180/pi*arctan(y/x)
- else
-  begin
-   if y<0 then resu:=270 else resu:=90;
-  end;
-
- if y=0 then
-  begin
-   if x<0 then resu:=180 else resu:=0;
-  end;
-
- range0a360(resu,resu);
-
- if (x>0) and (y>0) and (resu>180) then resu:=resu-180;
- if (x<0) and (y>0) and (resu>270) then resu:=resu-180;
- if (x<0) and (y<0) and (resu<180) then resu:=resu+180;
- if (x>0) and (y<0) and (resu<270) then resu:=resu+180;
+  resu := RadToDeg(ArcTan2(y, x));
+  range0a360(resu, resu);
 end;
 
+function ChampEntier(const s, sep : string; n : Integer) : Integer;
+var
+  p, k   : Integer;
+  reste  : string;
+begin
+  reste := s;
+  for k := 1 to n - 1 do
+  begin
+    p := Pos(sep, reste);
+    if p = 0 then
+    begin
+      Result := 0;
+      Exit;
+    end;
+    reste := Copy(reste, p + 1, Length(reste));
+  end;
+  p := Pos(sep, reste);
+  if p > 0 then reste := Copy(reste, 1, p - 1);
+  Result := StrToIntDef(Trim(reste), 0);
+end;
+
+procedure LireHMS(const hms : string; out h, m, s : Integer);
+begin
+  h := ChampEntier(hms, ':', 1);
+  m := ChampEntier(hms, ':', 2);
+  s := ChampEntier(hms, ':', 3);
+end;
 (* conversion des heures et decimales en heures minutes secondes*)
 procedure heuredecmin(decimal:real;var hms:str8);
 var
- h,m,s : integer;
- reste : real;
- chaine: string;
+  total, h, m, s : Int64;
+  signe          : string;
 begin
- h:=round(int(decimal));
- reste:=decimal-h;
- m:=round(int(60*reste));
- reste:=60*reste-m;
- s:=round(int(60*reste));
-
- str(h:2,chaine);
- hms:=chaine+':';
- str(m:2,chaine);
- hms:=hms+chaine+':';
- str(s:2,chaine);
- hms:=hms+chaine;
-
+  total := Round(Abs(decimal) * 3600);
+  if (decimal < 0) and (total > 0) then signe := '-' else signe := '';
+  h := total div 3600;
+  m := (total mod 3600) div 60;
+  s := total mod 60;
+  hms := Format('%s%.2d:%.2d:%.2d', [signe, h, m, s]);
 end;
 
 procedure heuremindec(hms:str8;var decimal:real);
-var
- erreur : integer;
- h,m,s  : word;
-
-begin
-
- val(copy(hms,1,2),h,erreur);
- val(copy(hms,4,2),m,erreur);
- val(copy(hms,7,2),s,erreur);
-
- decimal:=h+m/60+s/3600;
-
-end;
+  var
+    h, m, s : Integer;
+  begin
+    LireHMS(hms, h, m, s);
+    decimal := h + m/60 + s/3600;
+  end;
 
 
+{ ------------------------------------------------------------------ }
+{  Coordonnees                                                         }
+{ ------------------------------------------------------------------ }
+
+{ ecliptique -> equatorial }
 procedure par_27(lambda,beta,epsilon:real;var alpha : str8;var delta:real);
 var
- sindelta,x,y,alphaprime,reste : real;
- he,mi,se                      : word;
- chaine                        : string;
+  sindelta, x, y, alphaprime : real;
+begin
+  sindelta := sinus(beta)*cosinus(epsilon)+cosinus(beta)*sinus(epsilon)*sinus(lambda);
+  delta := arcsinus(sindelta);
+
+  y := sinus(lambda)*cosinus(epsilon)-tangente(beta)*sinus(epsilon);
+  x := cosinus(lambda);
+  corriquad(x, y, alphaprime);
+
+  alphaprime := alphaprime/15;
+  heuredecmin(alphaprime, alpha);
+  { l'arrondi peut donner 24:00:00 : une ascension droite vaut alors 00:00:00 }
+  if Copy(alpha, 1, 2) = '24' then alpha := '00' + Copy(alpha, 3, 6);
+end;
+
+{--------------------------------------------------------------}
+{ Conversion des coordonnees geocentriques en topocentriques   }
+{ Chat GPT le 26/10/2026                                       }
+{                                                              }
+{ alphaGeo     : ascension droite geocentrique HH:MM:SS        }
+{ deltaGeo     : declinaison geocentrique en degres            }
+{ vpi          : parallaxe horizontale en degres               }
+{ latitudeObs  : latitude geographique, nord positif           }
+{ longitudeObs : longitude geographique, est positif           }
+{ altitudeObs  : altitude de l'observatoire en metres          }
+{ jj           : jour julien de l'instant d'observation        }
+{                                                              }
+{ alphaTopo    : ascension droite topocentrique HH:MM:SS       }
+{ deltaTopo    : declinaison topocentrique en degres           }
+{                                                              }
+{ Le vecteur de l'observateur est calcule avec l'ellipsoide     }
+{ WGS84. Les distances sont exprimees en kilometres.           }
+{--------------------------------------------------------------}
+
+procedure GeoVersTopo(
+  alphaGeo: str8;
+  deltaGeo, vpi: real;
+  latitudeObs, longitudeObs, altitudeObs: real;
+  jj: real;
+  var alphaTopo: str8;
+  var deltaTopo: real
+);
+
+const
+  A_TERRE = 6378.137;           { Rayon equatorial WGS84, km }
+  E2_TERRE = 0.00669437999014;  { Premiere excentricite au carre }
+
+var
+  alphaG, deltaG : real;
+  distanceLune   : real;
+  latitudeRad    : real;
+  theta          : real;
+  gst            : real;
+  altitudeKm     : real;
+  n              : real;
+
+  { Vecteur geocentrique de la Lune }
+  xL, yL, zL     : real;
+
+  { Vecteur geocentrique de l'observateur }
+  xO, yO, zO     : real;
+
+  { Vecteur topocentrique de la Lune }
+  xT, yT, zT     : real;
+
+  rho            : real;
+  alphaT         : real;
 
 begin
 
- sindelta:=sinus(beta)*cosinus(epsilon)+cosinus(beta)*sinus(epsilon)*sinus(lambda);
- delta:=arcsinus(sindelta);
+  {------------------------------------------------------------}
+  { 1. Conversion de l'ascension droite en degres               }
+  {------------------------------------------------------------}
 
- y:=sinus(lambda)*cosinus(epsilon)-tangente(beta)*sinus(epsilon);
- x:=cosinus(lambda);
+  heuremindec(alphaGeo, alphaG);
+  alphaG := alphaG * 15.0;
 
- corriquad(x,y,alphaprime);
+  deltaG := deltaGeo;
 
- alphaprime:=alphaprime/15;
+  {------------------------------------------------------------}
+  { 2. Distance geocentrique de la Lune                         }
+  {------------------------------------------------------------}
 
- heuredecmin(alphaprime,alpha);
+  { La parallaxe horizontale doit etre positive et non nulle. }
+
+  if vpi <= 0 then
+  begin
+    alphaTopo := alphaGeo;
+    deltaTopo := deltaGeo;
+    Exit;
+  end;
+
+  distanceLune := A_TERRE / sinus(vpi);
+
+  {------------------------------------------------------------}
+  { 3. Vecteur geocentrique de la Lune                          }
+  {------------------------------------------------------------}
+
+  xL := distanceLune
+        * cosinus(deltaG)
+        * cosinus(alphaG);
+
+  yL := distanceLune
+        * cosinus(deltaG)
+        * sinus(alphaG);
+
+  zL := distanceLune
+        * sinus(deltaG);
+
+  {------------------------------------------------------------}
+  { 4. Position de l'observateur sur l'ellipsoide WGS84         }
+  {------------------------------------------------------------}
+
+  latitudeRad := latitudeObs;
+  altitudeKm := altitudeObs / 1000.0;
+
+  n := A_TERRE /
+       sqrt(1.0 - E2_TERRE * sqr(sinus(latitudeRad)));
+
+  {------------------------------------------------------------}
+  { 5. Temps sideral apparent de Greenwich                      }
+  {------------------------------------------------------------}
+
+  { jj correspond a l'instant d'observation, fraction de jour
+    comprise. On passe 00:00:00 pour ne pas ajouter une seconde
+    fois l'heure a ce jour julien. }
+
+  tsg(jj, '00:00:00', gst);
+
+  { Angle sideral local, en degres.
+    La longitude est positive vers l'est. }
+
+  theta := gst * 15.0 + longitudeObs;
+  range0a360(theta, theta);
+
+  {------------------------------------------------------------}
+  { 6. Vecteur de l'observateur dans le repere equatorial       }
+  {------------------------------------------------------------}
+
+  xO := (n + altitudeKm)
+        * cosinus(latitudeObs)
+        * cosinus(theta);
+
+  yO := (n + altitudeKm)
+        * cosinus(latitudeObs)
+        * sinus(theta);
+
+  zO := (n * (1.0 - E2_TERRE) + altitudeKm)
+        * sinus(latitudeObs);
+
+  {------------------------------------------------------------}
+  { 7. Vecteur topocentrique : Lune moins observateur            }
+  {------------------------------------------------------------}
+
+  xT := xL - xO;
+  yT := yL - yO;
+  zT := zL - zO;
+
+  {------------------------------------------------------------}
+  { 8. Retour aux coordonnees equatoriales                      }
+  {------------------------------------------------------------}
+
+  rho := sqrt(sqr(xT) + sqr(yT));
+
+  alphaT := RadToDeg(ArcTan2(yT, xT));
+  range0a360(alphaT, alphaT);
+
+  deltaTopo := RadToDeg(ArcTan2(zT, rho));
+
+  { Ascension droite en heures, minutes et secondes }
+
+  heuredecmin(alphaT / 15.0, alphaTopo);
+
+  if Copy(alphaTopo, 1, 2) = '24' then
+    alphaTopo := '00' + Copy(alphaTopo, 3, 6);
 
 end;
 
+{ ------------------------------------------------------------------ }
+{  Calendrier                                                          }
+{ ------------------------------------------------------------------ }
+
+{ Jour julien ; date 'jj/mm/aaaa', heure 'hh:mm:ss' }
 function julien(date:str10;heure:str8):real;
 var
- jo,mo,an,he,mi,se : word;
- erreur            : integer;
+ jo,mo,an,he,mi,se : integer;
  a,b,y,m           : real;
  gregorien         : boolean;
-
 begin
+  jo := ChampEntier(date, '/', 1);
+  mo := ChampEntier(date, '/', 2);
+  an := ChampEntier(date, '/', 3);
+  LireHMS(heure, he, mi, se);
 
- val(copy(date,1,2),jo,erreur);
- val(copy(date,4,2),mo,erreur);
- val(copy(date,7,4),an,erreur);
-
- val(copy(heure,1,2),he,erreur);
- val(copy(heure,4,2),mi,erreur);
- val(copy(heure,7,2),se,erreur);
-
- if mo<=2 then
+  if mo<=2 then
   begin
-   y:=an-1;
-   m:=mo+12;
+    y:=an-1;
+    m:=mo+12;
   end
   else
   begin
-   y:=an;
-   m:=mo;
+    y:=an;
+    m:=mo;
   end;
 
-  if (an>1582)
-  or ((an=1582) and (mo>10))
-  or ((an=1582) and (mo=10) and (jo>=15)) then
+  gregorien := (an>1582)
+            or ((an=1582) and (mo>10))
+            or ((an=1582) and (mo=10) and (jo>=15));
+
+  if gregorien then
   begin
-   a:=round(int(y/100));
-   b:=2-a+round(int(a/4));
-   gregorien:=true;
+    a:=round(int(y/100));
+    b:=2-a+round(int(a/4));
   end
-  else gregorien:=false;
+  else b:=0;
 
-  if not gregorien then b:=0;
-
-  julien:=jo+he/24+mi/1440+se/86400+round(int(365.25*y))+
-                                    round(int(30.6001*(m+1)))+
-                                    1720994.5+b;
-
+  Result := jo+he/24+mi/1440+se/86400+round(int(365.25*y))+
+            round(int(30.6001*(m+1)))+1720994.5+b;
 end;
+
+{ ------------------------------------------------------------------ }
+{  Equation de Kepler                                                  }
+{ ------------------------------------------------------------------ }
 
 procedure kepler(petit_e,M:real;var grand_e:real);
 var
  ecart,exe : real;
+ n         : integer;
 begin
-exe:=m;
-ecart:=10E6;
-while ecart>=1 do
-begin
- grand_e:=m+180/pi*petit_e*sinus(exe);
- ecart:=10E6*abs(grand_e-exe);
- exe:=grand_e;
-end;
-
+  exe:=m;
+  grand_e:=m;
+  ecart:=10E6;
+  n:=0;
+  while (ecart>=1) and (n<100) do      { 100 : garde-fou contre une non-convergence }
+  begin
+    grand_e:=m+180/pi*petit_e*sinus(exe);
+    ecart:=10E6*abs(grand_e-exe);
+    exe:=grand_e;
+    inc(n);
+  end;
 end;
 
 procedure ecart(alpha1:str8;delta1:real;alpha2:str8;delta2:real;var ecart:real);
@@ -288,55 +461,30 @@ begin
  deltapsi:=psi;
 
 end;
-function range0a24 (x :real) : real;
-begin
- if x<0 then
-  begin
-   while x<0 do x:=x+24;
-  end;
- if x>=24 then
-  begin
-   while x>=24 do x:=x-24;
-  end;
- range0a24:=x;
-end;
 
 {------------------------------------}
-{  calcul temps sid‚ral … Greenwich  }
+{  calcul temps sideral a Greenwich  }
 {Calculs Astronomiques page 27       }
 {------------------------------------}
 procedure tsg(jj:real;heure:str8;var zeta:real);
 var
- instant 		: real;
- t,interm,correction	: double;
- deltapsi,deltaepsilon	: real;
- minute,chaine		: string;
- vminute,erreur		: integer;
+ instant, interm, t, correction : real;
+ deltapsi, deltaepsilon         : real;
 begin
-   t:=(1.0*jj-2415020.0)/36525.0;
-   interm:=0.276919398+100.0021359*t+0.000001075*sqr(t);
-   interm:=24.0*(interm-int(interm));
+  t:=(1.0*jj-2415020.0)/36525.0;
+  interm:=0.276919398+100.0021359*t+0.000001075*sqr(t);
+  interm:=24.0*(interm-int(interm));
 
-   heuremindec(heure,instant);
-   interm:=interm+1.002737908*instant;
-   zeta:=interm;
-   if zeta>=24 then zeta:=zeta-24;
+  heuremindec(heure,instant);
+  interm:=interm+1.002737908*instant;
 
-   nutation(jj,deltapsi,deltaepsilon);
-   correction:=(deltapsi*cosinus(23.4417))/15;
-   correction:=correction/3600;
-   zeta:=zeta+correction;
+  { correction de nutation en heures (equation des equinoxes) }
+  nutation(jj,deltapsi,deltaepsilon);
+  correction:=(deltapsi*cosinus(23.4417))/15;
+  correction:=correction/3600;
 
-   {M‚thode 2  post 2000
-   t:=(1.0*jj-2451543.5);
-
-   heuremindec(heure,instant);
-   interm:=6.5987042532333+(24*t+instant)/(86164.091/86400);
-   interm:=range0a24(interm);
-   zeta:=interm;}
+  zeta:=range0a24(interm+correction);
 end;
-
-
 
 procedure tsg2(date : str10;heure : str8;var zeta : real);
 var
@@ -440,27 +588,28 @@ procedure Equatorial_to_Horizontal(jj:real;heure:str8;centiemes:word;alpha:str8;
                       var hauteur,z : real);
 var
  tslocal : real;
- a1,a2   : real;
- h	 : double;
+ a1,a2,d : real;
+ h       : double;
 begin
-tsl(jj,heure,vlongitude,tslocal);
-heuremindec(alpha,a1);
-a1:=a1*15;
-a2:=(tslocal+centiemes/360000)*15;
-h:=a2-a1;
+  tsl(jj,heure,vlongitude,tslocal);
+  heuremindec(alpha,a1);
+  a1:=a1*15;
+  a2:=(tslocal+centiemes/360000)*15;
+  h:=a2-a1;
 
-hauteur:=sinus(vlatitude)*sinus(delta)+cosinus(h)*cosinus(vlatitude)*cosinus(delta);
-hauteur:=arcsinus(hauteur);
+  hauteur:=sinus(vlatitude)*sinus(delta)+cosinus(h)*cosinus(vlatitude)*cosinus(delta);
+  hauteur:=arcsinus(hauteur);
 
-z:=sinus(delta)-sinus(vlatitude)*sinus(hauteur);
-z:=z/(cosinus(vlatitude)*cosinus(hauteur));
-
-z:=arccosinus(z);
-
-if sinus(h)>0 then z:=360-z;
-
+  d:=cosinus(vlatitude)*cosinus(hauteur);
+  if Abs(d) < 1E-12 then
+    z:=0                                   { au pole ou au zenith : azimut indetermine }
+  else
+  begin
+    z:=(sinus(delta)-sinus(vlatitude)*sinus(hauteur))/d;
+    z:=arccosinus(z);
+    if sinus(h)>0 then z:=360-z;
+  end;
 end;
-
 
 procedure tempsmoyen(heure,greenwich,vlongitude:real;var instant:str8);
 var heure2 :real;
@@ -477,31 +626,32 @@ end;
 procedure levercoucher(lever:boolean;alpha:str8;greenwich,vlatitude,vlongitude,delta,
                        parallaxe,angsize:real;var instant :str8);
 var
- tsp           : real;
- h             : real;
- a,b,cosh,sinh0: real;
+ tsp                    : real;
+ h                      : real;
+ a,b,coshor,sinh0       : real;
 begin
+  heuremindec(alpha,tsp);
+  sinh0:=sinus(parallaxe-REFRACTION_DEG-0.5*Abs(angsize));
 
-(*formule expliquée sur https://promenade.imcce.fr/fr/pages3/367.html *)
+  a:=sinus(vlatitude)*sinus(delta);
+  b:=cosinus(vlatitude)*cosinus(delta);
+  if Abs(b) < 1E-12 then
+  begin
+    instant:=HEURE_ABSENTE;
+    Exit;
+  end;
 
- heuremindec(alpha,tsp);
- if lever then
- begin
-  sinh0:=sinus(parallaxe-0.566-0.5*angsize);      (*0.566 correspond à 34' de réfraction *)
- end
- else
- begin
-  sinh0:=sinus(parallaxe-0.566+0.5*angsize);      (*0.566 correspond à 34' de réfraction *)
- end;
+  coshor:=(sinh0-a)/b;
+  if Abs(coshor) > 1 then
+  begin
+    instant:=HEURE_ABSENTE;
+    Exit;
+  end;
 
- a:=sinus(vlatitude)*sinus(delta);
- b:=cosinus(vlatitude)*cosinus(delta);
- cosh:=(sinh0-a)/b;
- h:=arccosinus(cosh)/15;
- (*temps sidéral lever ou coucher*)
- if lever then tsp:=tsp-h else tsp:=tsp+h;
- tempsmoyen(tsp,greenwich,vlongitude,instant);
-
+  h:=arccosinus(coshor)/15;
+  { temps sideral du lever ou du coucher }
+  if lever then tsp:=tsp-h else tsp:=tsp+h;
+  tempsmoyen(tsp,greenwich,vlongitude,instant);
 end;
 
 procedure meridien(alpha:str8;greenwich,vlongitude:real;var instant :str8);
@@ -513,41 +663,39 @@ begin
  tempsmoyen(tsp,greenwich,vlongitude,instant);
 end;
 
+{ Jour julien -> date et heure, arrondies a la seconde la plus proche.
+  L'arrondi est fait AVANT le decoupage : l'heure ne peut jamais valoir 24:00:00. }
 procedure invjulien(jjulien:real;var date:str10;var heure:str8);
 var
- z,f,a,b,c,d,e,alpha : real;
- an,mo,jo,he         : real;
- chaine              : string;
+ jj, z, f, a, b, c, d, e, alpha : real;
+ an, mo, jo                     : Integer;
+ secondes                       : Int64;
 begin
- jjulien:=jjulien+0.5;
- z:=int(jjulien);
- f:=jjulien-z;
- if z<2299161 then a:=z else
+  jj := Round((jjulien + 0.5) * 86400) / 86400;
+  z := int(jj);
+  f := jj - z;
+
+  secondes := Round(f * 86400);
+  if secondes > 86399 then secondes := 86399;
+
+  if z<2299161 then a:=z else
   begin
-   alpha:=int((z-1867216.25)/36524.25);
-   a:=z+1+alpha-int(alpha/4);
+    alpha:=int((z-1867216.25)/36524.25);
+    a:=z+1+alpha-int(alpha/4);
   end;
- b:=a+1524;
- c:=int((b-122.1)/365.25);
- d:=int(365.25*c);
- e:=int((b-d)/30.6001);
+  b:=a+1524;
+  c:=int((b-122.1)/365.25);
+  d:=int(365.25*c);
+  e:=int((b-d)/30.6001);
 
- jo:=b-d-int(30.6001*e)+f;
- he:=24*(jo-int(jo));
- jo:=int(jo);
- if e<13.5 then mo:=e-1 else mo:=e-13;
- if mo>2.5 then an:=c-4716 else an:=c-4715;
+  jo := Trunc(b-d-int(30.6001*e));
+  if e<13.5 then mo:=Trunc(e-1) else mo:=Trunc(e-13);
+  if mo>2.5 then an:=Trunc(c-4716) else an:=Trunc(c-4715);
 
-heuredecmin(he,heure);
-str(jo:2:0,chaine);
-date:=chaine+'/';
-str(mo:2:0,chaine);
-date:=date+chaine+'/';
-str(an:4:0,chaine);
-date:=date+chaine;
-
+  date  := Format('%.2d/%.2d/%.4d', [jo, mo, an]);
+  heure := Format('%.2d:%.2d:%.2d',
+                  [secondes div 3600, (secondes mod 3600) div 60, secondes mod 60]);
 end;
-
 procedure conversion_angle(angle:real;var degres,minute : word;var secondes:real);
 var
  interm : real;
@@ -559,12 +707,10 @@ secondes:=60*(interm-minute);
 
 end;
 
+{ Date du jour au format jj/mm/aaaa, quelle que soit la locale }
 function datesysteme : string;
-var
- y,mois,j,js 		: word;
- vdate,chaine	     	: string;
 begin
-      datesysteme:=copy(DateTimeToStr(Now),1,10);
+  Result := FormatDateTime('dd"/"mm"/"yyyy', Now);
 end;
 
 function visible(jj : real;alpha : str8;delta : real;alphaS : str8;deltaS : real) : boolean;
@@ -584,7 +730,7 @@ begin
     Equatorial_to_Horizontal(jjulien0,heure,0,alpha,global_latitude,global_longitude,delta,hauteur,z);
     equatorial_to_Horizontal(jjulien0,heure,0,alphaS,global_latitude,global_longitude,deltaS,hauteurS,z);
 
-    if hauteur>0 and hauteurS<0 then interm:=true else interm:=false;
+    if (hauteur>0) and (hauteurS<0) then interm:=true else interm:=false;
 
     Visible:=interm;
 
