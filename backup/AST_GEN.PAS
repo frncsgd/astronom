@@ -20,6 +20,7 @@ procedure heuredecmin(decimal:real;var hms:str8);
 procedure heuremindec(hms:str8;var decimal:real);
 procedure corriquad(x,y:real;var resu:real);
 procedure par_27(lambda,beta,epsilon:real;var alpha : str8;var delta:real);
+procedure GeoVersTopo(alphaGeo: str8;deltaGeo, vpi: real;latitudeObs, longitudeObs, altitudeObs: real;jj: real;var alphaTopo: str8;var deltaTopo: real);
 function julien(date:str10;heure:str8):real;
 procedure kepler(petit_e,M:real;var grand_e:real);
 procedure ecart(alpha1:str8;delta1:real;alpha2:str8;delta2:real;var ecart:real);
@@ -611,7 +612,7 @@ begin
   end;
 end;
 
-procedure tempsmoyen(heure,greenwich,vlongitude:real;var instant:str8);
+procedure tempsmoyen(heure,greenwich,vlongitude:real;var decaljour: short,instant:str8);
 var heure2 :real;
 begin
 

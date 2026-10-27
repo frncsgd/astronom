@@ -22,6 +22,8 @@ procedure physiques;
 
 implementation
 
+uses DateUtils;  {Pour usage de la fonction IncHour}
+
 const
     NOMS_MOIS : array[1..12] of string[10] =
     ('JANVIER','FEVRIER','MARS','AVRIL','MAI','JUIN','JUILLET','AOUT',
@@ -269,12 +271,13 @@ var
  alphaTopo : str8;
  deltaTopo : real;
  jj : real;
+ heureModifiee    : Tdatetime;
 const
  altitude=160;
 begin
-
-date:=copy(FormatDateTime('dd/mm/yyyy hh:mm:ss',Now),1,10);
-heure:=copy(FormatDateTime('dd/mm/yyyy hh:mm:ss',Now),12,8);
+HeureModifiee := IncHour(Now, -Global_DecalageTu); // Enlève 1 heure
+date:=copy(FormatDateTime('dd/mm/yyyy hh:mm:ss',heuremodifiee),1,10);
+heure:=copy(FormatDateTime('dd/mm/yyyy hh:mm:ss',heuremodifiee),12,8);
 
 chaine:=InputBox('Position de la Lune', 'Date', date);
 date:=chaine;
@@ -579,16 +582,7 @@ while not fin do
 
   alpha2:=alpha;
   delta2:=delta;
-
-  for n:=1 to 10 do
-   begin
-    meridien(alpha2,greenwich,longitude,hmeridien);
-    coordlune(jour,hmeridien,lambda,beta,vpi,delta2,alpha2);
-   end;
-
-
-  alpha2:=alpha;
-  delta2:=delta;
+  hmeridien:=lever;
 
   for n:=1 to 10 do
    begin

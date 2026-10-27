@@ -22,6 +22,8 @@ procedure physiques;
 
 implementation
 
+uses DateUtils;      {Pour la fonction IncHour}
+
 const
     NOMS_MOIS : array[1..12] of string[10] =
     ('JANVIER','FEVRIER','MARS','AVRIL','MAI','JUIN','JUILLET','AOUT',
@@ -269,12 +271,13 @@ var
  alphaTopo : str8;
  deltaTopo : real;
  jj : real;
+ heureModifiee    : Tdatetime;
 const
  altitude=160;
 begin
-
-date:=copy(FormatDateTime('dd/mm/yyyy hh:mm:ss',Now),1,10);
-heure:=copy(FormatDateTime('dd/mm/yyyy hh:mm:ss',Now),12,8);
+HeureModifiee := IncHour(Now, -Global_DecalageTu); // Enlève 1 heure
+date:=copy(FormatDateTime('dd/mm/yyyy hh:mm:ss',heuremodifiee),1,10);
+heure:=copy(FormatDateTime('dd/mm/yyyy hh:mm:ss',heuremodifiee),12,8);
 
 chaine:=InputBox('Position de la Lune', 'Date', date);
 date:=chaine;
@@ -301,7 +304,7 @@ writeln(fichier,'Les coordonnées ci-dessous sont en position GEOcentrique');
 writeln(fichier,'Alpha  = ',alpha:8);
 writeln(fichier,'Delta  = ',delta:6:2);
 writeln(fichier,'');
-writeln(fichier,'Les coordonnées ci-dessous sont en position TOPOgraphiques');
+writeln(fichier,'Les coordonnées ci-dessous sont en position TOPOcentriques');
 writeln(fichier,'Alpha  = ',alphatopo:8);
 writeln(fichier,'Delta  = ',deltatopo:6:6);
 writeln(fichier,'');
@@ -557,6 +560,7 @@ while not fin do
   heuredecmin(vpi,par);
   write(lst,alpha:8,' ',delta:7:2,' ',par:8,'  ');
 
+  {Lever}
   alpha2:=alpha;
   delta2:=delta;
   vpi2:=vpi;
@@ -567,6 +571,18 @@ while not fin do
     coordlune(jour,lever,lambda,beta,vpi2,delta2,alpha2);
    end;
 
+  {Passage au méridien}
+  alpha2:=alpha;
+  delta2:=delta;
+  hmeridien:=lever;
+
+  for n:=1 to 10 do
+   begin
+    meridien(alpha2,greenwich,longitude,hmeridien);
+    coordlune(jour,hmeridien,lambda,beta,vpi,delta2,alpha2);
+   end;
+
+  {coucher}
   alpha2:=alpha;
   delta2:=delta;
   vpi2:=vpi;
@@ -577,24 +593,6 @@ while not fin do
     coordlune(jour,coucher,lambda,beta,vpi2,delta2,alpha2);
    end;
 
-  alpha2:=alpha;
-  delta2:=delta;
-
-  for n:=1 to 10 do
-   begin
-    meridien(alpha2,greenwich,longitude,hmeridien);
-    coordlune(jour,hmeridien,lambda,beta,vpi,delta2,alpha2);
-   end;
-
-
-  alpha2:=alpha;
-  delta2:=delta;
-
-  for n:=1 to 10 do
-   begin
-    meridien(alpha2,greenwich,longitude,hmeridien);
-    coordlune(jour,hmeridien,lambda,beta,vpi,delta2,alpha2);
-   end;
 
   write(lst,lever:8,' ',hmeridien:8,' ',coucher:8);
   writeln(lst,'');
